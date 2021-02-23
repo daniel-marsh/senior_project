@@ -1,3 +1,5 @@
+# Transfer Learning - Daniel Marsh
+
 Project Description:
 This project will attempt to apply transfer learning to a variety of common machine learning techniques. Each technique will be trained on a simplified version of the game "Can't Stop". The agents will then be tested on the full version to see how well each approach is able to apply transfer learning.
 
