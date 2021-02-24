@@ -1,6 +1,5 @@
 #include <iostream>
 #include <vector>
-#include <ctime>
 using namespace std; 
 
 class Board {
@@ -48,10 +47,9 @@ class Board {
         }
 
         // Obtain a new roll
-        vector<int> roll() {
+        vector<int> get_roll() {
             // Get four random number from 1-dice_size
-            static vector<int> new_roll;
-            srand((unsigned)time(NULL));
+            vector<int> new_roll;
             for (int i = 0; i < 4; i++) {
                 new_roll.push_back((rand() % dice_size) + 1);
             }
@@ -71,7 +69,10 @@ class Board {
                     won_columns_p1++;
                 }
                 // If either player has won three columns, return 1
-                if ((won_columns_p0 == 3) || (won_columns_p1 == 3)) {
+                if (won_columns_p0 == 3) {
+                    return 0;
+                }
+                if (won_columns_p1 == 3) {
                     return 1;
                 }
             }
@@ -124,6 +125,66 @@ class Board {
             return 1;
         }
 
+        // Display the board
+        int display_board() {
+            vector<vector<char>> board_image;
+            int middle_column_index = (num_columns / 2);
+            int max_height = len_columns[middle_column_index] + 1;
+            for (int i = 0; i < max_height; i++) {
+                vector<char> cur_line;
+                for (int j = 0; j < num_columns; j++) {
+                    if (i > len_columns[j]) {
+                        cur_line.push_back('-');
+                    }
+                    else if ((stop_positions[j][0] == i) && (stop_positions[j][1] == i)) {
+                        cur_line.push_back('B');
+                    }
+                    else if (stop_positions[j][0] == i) {
+                        cur_line.push_back('0');
+                        continue;
+                    }
+                    else if (stop_positions[j][1] == i) {
+                        cur_line.push_back('1');
+                        continue;
+                    }
+                    else if (i == len_columns[j]) {
+                        cur_line.push_back('*');
+                    }
+                    else {
+                        cur_line.push_back('+');
+                    }
+                }
+                board_image.push_back(cur_line);
+            }
+            int count = 0;
+            while ((count < num_columns) && (count < 7)) {
+                std::cout << count+2 << "   ";
+                count++;
+            }
+            while (count < num_columns) {
+                std::cout << count+2 << "  ";
+                count++;
+            }
+            std::cout << "\n";
+            for (int i = max_height - 1; i > -1; i--) {
+                for (int j = 0; j < num_columns; j++) {
+                    std::cout << board_image[i][j] << "   ";
+                }
+                std::cout << "\n";
+            }
+            count = 0;
+            while ((count < num_columns) && (count < 7)) {
+                std::cout << count+2 << "   ";
+                count++;
+            }
+            while (count < num_columns) {
+                std::cout << count+2 << "  ";
+                count++;
+            }
+            std::cout << "\n";
+            return 1;
+        }
+
 
 
     private:
@@ -170,17 +231,31 @@ class Board {
 
 };
 
-int main() {
-    Board new_board;
-    new_board.init(3);
-    vector<int> first_roll = new_board.roll();
-    for (int i = 0; i < 4; i++) {
-        std::cout << first_roll[i] << " ";
+Board make_random_move(Board game_board) {
+    int rand_choice = rand() % 3;
+    if (rand_choice == 0) {
+        game_board.end_turn();
+        return game_board;
     }
-    vector<vector<int>> pairs = new_board.get_pairs(first_roll);
-    new_board.make_move(pairs[0][0], pairs[0][1]);
+    vector<int> roll = game_board.get_roll();
+    vector<vector<int>> pairs = game_board.get_pairs(roll);
+    rand_choice = rand() % 3;
+    vector<int> chosen_pair = pairs[rand_choice];
+    game_board.make_move(chosen_pair[0], chosen_pair[1]);
+    return game_board;
+}
 
-    new_board.end_turn();
-    new_board.print_state();
+int main() {
+    srand(time(0));
+    Board game_board;
+    game_board.init(6);
+    while (game_board.game_over() < 0) {
+       game_board = make_random_move(game_board);
+    }
+    int winner = game_board.game_over();
+    // game_board = make_random_move(game_board);
+    game_board.display_board();
+    // game_board.print_state();
+    std::cout << "\n\nPlayer " << winner << " wins!\n";
     return 0;
 }
