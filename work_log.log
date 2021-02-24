@@ -8,7 +8,8 @@ Planning
 Rule Implementation
 02/24	11:30AM		1:00PM		1:30		Wrote first several functions in board class.
 02/24	2:00PM		3:15PM		1:15		Wrote remaining core functions in board class and started preliminary testing.
-				TOTAL:  7:15
+02/24	4:00PM		5:45PM		1:45		Added to Board class functions and created a simple random move agent to test.
+				TOTAL:  9:00
 
 
 
