@@ -5,12 +5,18 @@ Planning
 02/19   12:00PM		12:30PM		0:30		Edited proposal.
 02/20   1:30PM		2:30PM		1:00		Planned rule setup and simple agents.
 02/23   4:00PM		4:30PM		0:30		Setup Github page and made first commit.
+				 Total: 4:30
 Rule Implementation
 02/24	11:30AM		1:00PM		1:30		Wrote first several functions in board class.
 02/24	2:00PM		3:15PM		1:15		Wrote remaining core functions in board class and started preliminary testing.
 02/24	4:00PM		5:45PM		1:45		Added to Board class functions and created a simple random move agent to test.
 02/25	11:20AM		11:50AM		0:30		Implemented input to ./cant_stop.
-				TOTAL:  9:30
+			 	 Total: 5:00
+Simple Agents
+02/25	12:00PM		12:30PM		0:30		Restructured rules and board files for cleaner use. Worked on random agent.
+				 Total: 0:30
+
+PROJECT TOTAL:  10:00
 
 
 
