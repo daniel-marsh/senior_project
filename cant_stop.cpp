@@ -3,6 +3,7 @@
 #include <string>
 #include "board.h"
 #include "random.h"
+#include "simple.h"
 using namespace std; 
 
 int main(int argc, char** argv) {
@@ -19,9 +20,15 @@ int main(int argc, char** argv) {
     if ((strcmp(argv[2], "random") == 0) or (strcmp(argv[2], "-r") == 0)) {
         make_player0_move = make_random_move;
     }
+    else if ((strcmp(argv[2], "simple") == 0) or (strcmp(argv[2], "-s") == 0)) {
+        make_player0_move = make_smart_move;
+    }
 
     if ((strcmp(argv[3], "random") == 0) or (strcmp(argv[3], "-r") == 0)) {
         make_player1_move = make_random_move;
+    }
+    else if ((strcmp(argv[3], "simple") == 0) or (strcmp(argv[3], "-s") == 0)) {
+        make_player1_move = make_smart_move;
     }
 
     srand(time(0));
