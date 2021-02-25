@@ -5,6 +5,8 @@ This project will attempt to apply transfer learning to a variety of common mach
 
 There will be three main approaches. First, a Q-Learning approach that initializes a bucketing scheme using the simplified game and estimates the values of the full game with expected value functions. Second, a LSTM network approach that takes inputs of different size. And third, an autoencoder that is trained to translate any version of the game to a common state representation. 
 
-How to run eah agent:
+How to run each agent:
+
+The general call is $ ./cant_stop [dice_size] [agent 1] [agent 2]
 
 
