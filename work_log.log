@@ -1,11 +1,15 @@
 Date 	Time Start	Time Stop	Time Spent	Notes
 
+Pre-Planning
+01/11-02/08 				8:00 		Planning project and selecting topic.
+				 Total: 8:00
+
 Planning
-02/09   11:00AM		1:30PM		2:30		Wrote up proposal.
+02/09   9:30AM		1:30PM		4:00		Wrote up proposal.
 02/19   12:00PM		12:30PM		0:30		Edited proposal.
 02/20   1:30PM		2:30PM		1:00		Planned rule setup and simple agents.
-02/23   4:00PM		4:30PM		0:30		Setup Github page and made first commit.
-				 Total: 4:30
+02/23   3:30PM		4:30PM		1:00		Setup Github page and made first commit.
+				 Total: 6:30
 Rule Implementation
 02/24	11:30AM		1:00PM		1:30		Wrote first several functions in board class.
 02/24	2:00PM		3:15PM		1:15		Wrote remaining core functions in board class and started preliminary testing.
@@ -13,11 +17,12 @@ Rule Implementation
 02/25	11:20AM		11:50AM		0:30		Implemented input to ./cant_stop.
 			 	 Total: 5:00
 Simple Agents
-02/25	12:00PM		12:30PM		0:30		Restructured rules and board files for cleaner use. Worked on random agent.
-02/25   1:00PM		2:00PM		1:00		Setup agent with simple game knowledge.
-				 Total: 1:30
+02/25	12:00PM		1:00PM		1:00		Restructured rules and board files for cleaner use. Worked on random agent.
+02/25   1:00PM		3:00PM		2:00		Setup agent with simple game knowledge.
+03/06	12:00PM		2:30PM		2:30		Created a search agent of depth 1.
+				 Total: 5:00
 
-PROJECT TOTAL:  11:00
+PROJECT TOTAL:  24:30
 
 
 

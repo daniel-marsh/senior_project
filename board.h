@@ -31,6 +31,28 @@ class Board {
             return 1;
         }
 
+        int clone(Board original) {
+            // Set turn
+            turn = original.turn;
+            // Set dice size
+            dice_size = original.dice_size;
+            // Set num columns
+            num_columns = original.num_columns;
+            // Set runners
+            for (int i = 0; i < 3; i++) {
+                runner_positions[i][0] = original.runner_positions[i][0];
+                runner_positions[i][1] = original.runner_positions[i][1];
+            }
+            // Set stop positions and column lengths
+            for (int i  = 0; i < num_columns; i++) {
+                stop_positions[i][0] = original.stop_positions[i][0];
+                stop_positions[i][1] = original.stop_positions[i][1];
+                len_columns[i] = original.len_columns[i];
+            }
+            return 1;
+
+        }
+
         // Player chooses to stop
         // Advance any stops in rows with runners
         // Reset the runner to off the board
