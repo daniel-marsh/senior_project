@@ -31,6 +31,18 @@ class Board {
             return 1;
         }
 
+        // Reset the board to the initial state
+        int reset_board() {
+            turn = 0;
+            runner_positions = {{-1, 0}, {-1, 0}, {-1, 0}};
+            int middle_column = (num_columns / 2) + 1;
+            for (int i = 0; i < num_columns; i++){
+                stop_positions[i] = {0, 0};
+            }
+            return 1;
+        }
+            
+
         int clone(Board original) {
             // Set turn
             turn = original.turn;
@@ -55,7 +67,7 @@ class Board {
 
         // Player chooses to stop
         // Advance any stops in rows with runners
-        // Reset the runner to off the board
+        // Reset the runners to off the board
         // Switch turn
         int end_turn() {
             int ith_runner_column;
@@ -122,6 +134,18 @@ class Board {
             // If neither column has a valid move, go_bust and return -1
             go_bust();
             return -1;
+        }
+
+        // Check if a roll pairing makes you go bust
+        int goes_bust(int column_a, int column_b) {
+            int move_a = try_runner(column_a);
+            int move_b = try_runner(column_a);
+            // If either cloumn contains a valid move, return 0 since you do not go bust
+            if ((move_a == 1) || (move_b == 1)) {
+                return 0;
+            }
+            // If neither column has a valid move, return 1 since you will go bust
+            return 1;
         }
 
         // Given four numbers from the roll, make the three possible pairs
@@ -214,6 +238,38 @@ class Board {
 
 
     private:
+        // Check if a runner can move in the given column
+        int try_runner(int runner_column) {
+            // If either player has locked the column, return -1 (cannot advance runner)
+            if ((stop_positions[runner_column][0] == len_columns[runner_column]) || (stop_positions[runner_column][1] == len_columns[runner_column])) {
+                return -1;
+            }
+            // Look if there is a runner in this column yet
+            int free_runner = -1;
+            for (int i = 0; i < 3; i++) {
+                // If there is a runner in this column
+                if (runner_positions[i][0] == runner_column) {
+                    // If that runner is already at the top, return -1 (cannot move any more)
+                    if (runner_positions[i][1] == len_columns[runner_column]) {
+                        return -1;
+                    }
+                    // Otherwise return 1 (you can move the runner)
+                    return 1;
+                }
+                // If the current runner is not in the right column, check if it is free to be added (remember this for later)
+                else if (runner_positions[i][0] == -1) {
+                    free_runner = i;
+                }
+            }
+            // If none of the runners are in the column already and there are no free runners, return -1 (cannot move runner)
+            if (free_runner == -1) {
+                return -1;
+            }
+            // If there is a free runner, you can advance a runner in that column, return 1
+            return 1;
+        }
+
+
         // Move a runner in a given column if possible, otheriwse, return -1 
         int move_runner(int runner_column) {
             // If either player has locked the column, return -1 (cannot advance runner)
