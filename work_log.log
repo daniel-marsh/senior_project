@@ -21,8 +21,11 @@ Simple Agents
 02/25   1:00PM		3:00PM		2:00		Setup agent with simple game knowledge.
 03/06	12:00PM		2:30PM		2:30		Created a search agent of depth 1.
 				 Total: 5:00
+Q-Learning Agent
+03/14   11:00AM		2:30PM		3:30		Worked with orphaned java code from Prof. Glenn to calculate optimal solitaire strategy for simple game. 
+				 Total: 3:30
 
-PROJECT TOTAL:  24:30
+PROJECT TOTAL:  28:00
 
 
 
