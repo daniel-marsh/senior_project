@@ -41,6 +41,7 @@ int main(int argc, char** argv) {
     }
     else if ((strcmp(argv[2], "q_learn") == 0) or (strcmp(argv[2], "-q") == 0)) {
         q_learn_agent_0.init("3_side_start_data.txt");
+        q_learn_agent_0.train(10, dice_size);
         // q_learn_agent_0.init("");
         make_player0_move = q_agent_move;
     }
@@ -56,6 +57,7 @@ int main(int argc, char** argv) {
     }
     else if ((strcmp(argv[3], "q_learn") == 0) or (strcmp(argv[3], "-q") == 0)) {
         q_learn_agent_1.init("3_side_start_data.txt");
+        q_learn_agent_1.train(10, dice_size);
         // q_learn_agent_1.init("");
         make_player1_move = q_agent_move;
     }
