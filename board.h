@@ -138,8 +138,8 @@ class Board {
 
         // Check if a roll pairing makes you go bust
         int goes_bust(int column_a, int column_b) {
-            int move_a = try_runner(column_a);
-            int move_b = try_runner(column_a);
+            int move_a = try_runner(column_a - 2);
+            int move_b = try_runner(column_a - 2);
             // If either cloumn contains a valid move, return 0 since you do not go bust
             if ((move_a == 1) || (move_b == 1)) {
                 return 0;
@@ -255,7 +255,8 @@ class Board {
         // Check if a runner can move in the given column
         int try_runner(int runner_column) {
             // If either player has locked the column, return -1 (cannot advance runner)
-            if ((stop_positions[runner_column][0] == len_columns[runner_column]) || (stop_positions[runner_column][1] == len_columns[runner_column])) {
+            int column_height = len_columns[runner_column];
+            if ((stop_positions[runner_column][0] == column_height) || (stop_positions[runner_column][1] == column_height)) {
                 return -1;
             }
             // Look if there is a runner in this column yet
