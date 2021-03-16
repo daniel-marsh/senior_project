@@ -5,7 +5,20 @@
 #include "random.h"
 #include "simple.h"
 #include "flat_mcts.h"
+#include "q_learn.h"
 using namespace std; 
+
+Q_agent q_learn_agent_0;
+Q_agent q_learn_agent_1;
+
+Board q_agent_move(Board game_board) {
+    if (game_board.turn == 0) {
+       return q_learn_agent_0.make_move(game_board);
+    }
+    else {
+        return q_learn_agent_1.make_move(game_board);
+    }
+}
 
 int main(int argc, char** argv) {
 
@@ -14,7 +27,6 @@ int main(int argc, char** argv) {
         return 0;
     }
     int dice_size = stoi(argv[1]);
-
     function<Board(Board)> make_player0_move;
     function<Board(Board)> make_player1_move;
 
@@ -27,6 +39,11 @@ int main(int argc, char** argv) {
     else if ((strcmp(argv[2], "mcts") == 0) or (strcmp(argv[2], "-m") == 0)) {
         make_player0_move = make_mcts_move;
     }
+    else if ((strcmp(argv[2], "q_learn") == 0) or (strcmp(argv[2], "-q") == 0)) {
+        q_learn_agent_0.init("3_side_start_data.txt");
+        // q_learn_agent_0.init("");
+        make_player0_move = q_agent_move;
+    }
 
     if ((strcmp(argv[3], "random") == 0) or (strcmp(argv[3], "-r") == 0)) {
         make_player1_move = make_random_move;
@@ -36,6 +53,11 @@ int main(int argc, char** argv) {
     }
     else if ((strcmp(argv[3], "mcts") == 0) or (strcmp(argv[3], "-m") == 0)) {
         make_player1_move = make_mcts_move;
+    }
+    else if ((strcmp(argv[3], "q_learn") == 0) or (strcmp(argv[3], "-q") == 0)) {
+        q_learn_agent_1.init("3_side_start_data.txt");
+        // q_learn_agent_1.init("");
+        make_player1_move = q_agent_move;
     }
 
     srand(time(0));
