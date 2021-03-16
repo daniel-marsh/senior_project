@@ -89,10 +89,11 @@ class Q_agent {
             double stop_reward = 0.5;
             // Time to stop training
             time_t start = time(NULL);
+            int game_count = 0;
             // While there is time left, train
             while(time(NULL) - start < seconds) {
+                game_count++;
                 // Play the game to a terminal state
-                std::cout << "START_GAME\n";
                 while (game_board.game_over() == -1) {
                     vector<int> cur_bucket_inds = get_bucket_helper(game_board);
                     vector<int> next_bucket_inds;
@@ -148,8 +149,6 @@ class Q_agent {
                             r = ((double)rand() / (RAND_MAX));
                             if (r < epsilon) {
                                 min_index = rand() % 3;
-                            }
-                            else {
                             }
                             // Make the move and update q vals
                             game_board.make_move(pairs[min_index][0], pairs[min_index][1]);
@@ -221,8 +220,6 @@ class Q_agent {
                             if (r < epsilon) {
                                 min_index = min_index = rand() % 3;;
                             }
-                            else {
-                            }
                             // Make the move and update q vals
                             game_board.make_move(pairs[min_index][0], pairs[min_index][1]);
                             // Get the next bucket
@@ -242,10 +239,10 @@ class Q_agent {
                     }
                 }
                 // Reset the game_board
-                std::cout << "NEW GAME\n";
                 game_board.reset_board();
             }
             dump_q_vals();
+            std::cout << "NUMBER OF GAMES SIMULATED = " << game_count << "\n";
             return 1;
         }
 
@@ -363,7 +360,7 @@ class Q_agent {
             total_progress = total_progress / double(num_columns);
             double top_three_progress_val = accumulate(top_three_progress.begin(), top_three_progress.end(), 0.0);
             top_three_progress_val = top_three_progress_val / 3.0;
-            double runner_diffs = accumulate(runner_diff_percentages.begin(), runner_diff_percentages.end(), 0.0);
+            double runner_diffs = accumulate(runner_diff_percentages.begin(), runner_diff_percentages.end(), 0.0) / 3;
             vector<int> return_vals = {int(trunc(total_progress*10)), int(trunc(top_three_progress_val*10)), int(trunc(runner_diffs*10))};
             // If any normalized value is exactly 1.0, there would be a seg fault as we try to access too far out. (Just include these in previous bucket)
             for (int i = 0; i < 3; i++) {

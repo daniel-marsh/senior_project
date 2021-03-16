@@ -166,6 +166,9 @@ class Board {
                     double stop_height = double(stop_positions[runner_column][turn]);
                     double column_length = double(len_columns[runner_column]);
                     runner_diffs[i] = (runner_height - stop_height) / column_length;
+                    if (runner_diffs[i] > 1) {
+                        runner_diffs[i] = 1.0;
+                    }
                 }
             }
             return runner_diffs;

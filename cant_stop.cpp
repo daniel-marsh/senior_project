@@ -65,18 +65,13 @@ int main(int argc, char** argv) {
     srand(time(0));
     Board game_board;
     game_board.init(dice_size);
-    int count = 1;
     while (game_board.game_over() < 0) {
-        if (count % 10 == 0) {
-            std::cout << "Move Number " << count << "\n";
-        }
         if (game_board.turn == 0) {
             game_board = make_player0_move(game_board);
         }
         else {
             game_board = make_player1_move(game_board);
         }
-        count++;
     }
     int winner = game_board.game_over();
     // game_board = make_random_move(game_board);
