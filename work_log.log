@@ -24,9 +24,10 @@ Simple Agents
 Q-Learning Agent
 03/14   11:00AM		2:30PM		3:30		Worked with orphaned java code from Prof. Glenn to calculate optimal solitaire strategy for simple game. 
 03/14	2:30PM		4:00PM		1:30		Wrote some new board functions in preparation for Q-Learning.
-				 Total: 5:00
+03/16   12:30PM		3:30PM		3:00		Created the q_learn basic skeleton. init(), make_move(), get_bucket(), next need to implement train.
+				 Total: 8:00
 
-PROJECT TOTAL:  29:30
+PROJECT TOTAL:  32:30
 
 
 

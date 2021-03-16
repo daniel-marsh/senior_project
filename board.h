@@ -14,7 +14,7 @@ class Board {
         vector<vector<int>> runner_positions = {{-1, 0}, {-1, 0}, {-1, 0}};
         vector<vector<int>> stop_positions;
         vector<int> len_columns;
-        vector<int> base_column_len = {4, 5, 7, 9, 11, 13};
+        vector<int> base_column_len = {3, 5, 7, 9, 11, 13};
         // Setup the values of all pieces on the board
         int init(int given_dice_size) {
             dice_size = given_dice_size;
@@ -155,6 +155,20 @@ class Board {
             pairs.push_back({cur_roll[0] + cur_roll[2], cur_roll[2] + cur_roll[3]});
             pairs.push_back({cur_roll[0] + cur_roll[3], cur_roll[1] + cur_roll[2]});
             return pairs;
+        }
+
+        vector<double> get_runner_diffs() {
+            vector<double> runner_diffs = {0.0, 0.0, 0.0};
+            for (int i = 0; i < 3; i++) {
+                int runner_column = runner_positions[i][0];
+                if (runner_column != -1) {
+                    double runner_height = double(runner_positions[i][1]);
+                    double stop_height = double(stop_positions[runner_column][turn]);
+                    double column_length = double(len_columns[runner_column]);
+                    runner_diffs[i] = (runner_height - stop_height) / column_length;
+                }
+            }
+            return runner_diffs;
         }
 
         // Print the position of runners, stops etc.
