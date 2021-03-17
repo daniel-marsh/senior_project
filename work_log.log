@@ -1,8 +1,9 @@
 Date 	Time Start	Time Stop	Time Spent	Notes
 
 Pre-Planning
-01/11-02/08 				8:00 		Planning project and selecting topic.
-				 Total: 8:00
+01/11-01/26				5:00		Research and topic selection.
+01/27-02/08 				8:00 		Planning project and approach selection.
+				 Total: 13:00
 
 Planning
 02/09   9:30AM		1:30PM		4:00		Wrote up proposal.
@@ -11,11 +12,11 @@ Planning
 02/23   3:30PM		4:30PM		1:00		Setup Github page and made first commit.
 				 Total: 6:30
 Rule Implementation
-02/24	11:30AM		1:00PM		1:30		Wrote first several functions in board class.
-02/24	2:00PM		3:15PM		1:15		Wrote remaining core functions in board class and started preliminary testing.
-02/24	4:00PM		5:45PM		1:45		Added to Board class functions and created a simple random move agent to test.
+02/24	9:30AM		1:00PM		3:30		Wrote first several functions in board class.
+02/24	2:00PM		3:45PM		1:45		Wrote remaining core functions in board class and started preliminary testing.
+02/24	4:00PM		7:45PM		3:45		Added to Board class functions and created a simple random move agent to test.
 02/25	11:20AM		11:50AM		0:30		Implemented input to ./cant_stop.
-			 	 Total: 5:00
+			 	 Total: 9:30
 Simple Agents
 02/25	12:00PM		1:00PM		1:00		Restructured rules and board files for cleaner use. Worked on random agent.
 02/25   1:00PM		3:00PM		2:00		Setup agent with simple game knowledge.
@@ -29,7 +30,7 @@ Q-Learning Agent
 03/16	6:00PM		6:30PM		0:30		Fixed seg fault. Is not yet a good agent. Need to tune. Will tune before initializing.
 				 Total: 10:30
 
-PROJECT TOTAL:  35:00
+PROJECT TOTAL:  44:30
 
 
 
