@@ -13,7 +13,7 @@ class Q_agent {
     public:
         // Q values of the buckets
         vector<vector<vector<vector<double>>>> q_vals;
-
+        double default_val = 1.0;
         // A function to initialize the q values
         // The values are initialized to 0.5 if no file is given
         // Or, the data in a given file is used to initialize the buckets
@@ -29,7 +29,7 @@ class Q_agent {
                     q_vals[x][y] = vector<vector<double>>(10);
                     bucket_counts[x][y] = vector<int>(10);
                     for (int z = 0; z < 10; z++) {
-                        q_vals[x][y][z] = {0.5, 0.5};
+                        q_vals[x][y][z] = {default_val, default_val};
                         bucket_counts[x][y][z] = 0;
                     }
                 }
@@ -62,7 +62,7 @@ class Q_agent {
                     for (int y = 0; y < 10; y++) {
                         for (int z = 0; z < 10; z++) {
                             if (bucket_counts[x][y][z] > 0) {
-                                double new_val = (q_vals[x][y][z][0] - 0.5) / double(bucket_counts[x][y][z]);
+                                double new_val = (q_vals[x][y][z][0] - default_val) / double(bucket_counts[x][y][z]);
                                 q_vals[x][y][z] = {new_val, new_val};
                             }
                         }
@@ -83,15 +83,24 @@ class Q_agent {
             // Create the training board
             Board game_board;
             game_board.init(dice_size);
-            double epsilon = 0.15;
-            double alpha = 0.2;
-            double gamma = 0.1;
-            double stop_reward = 0.5;
+            // Training parameters 
+            double epsilon = 0.3;
+            double alpha = 0.1;
+            double gamma = 0.99;
+            // The penalty for stopping or going bust
+            double stop_reward = 0.025;
+            // The reward for successfully rolling
+            double bust_init = -0.025;
             // Time to stop training
             time_t start = time(NULL);
             int game_count = 0;
             // While there is time left, train
             while(time(NULL) - start < seconds) {
+                if (game_count % 1000 == 0) {
+                    epsilon = epsilon / 2;
+                    std::cout << "Trained on " << game_count << " simulations: ";
+                    std::cout << seconds - int(trunc(time(NULL) - start)) << " seconds of training remaining\n";
+                }
                 game_count++;
                 // Play the game to a terminal state
                 while (game_board.game_over() == -1) {
@@ -121,7 +130,7 @@ class Q_agent {
                             // Current q value is value of rolling from current state
                             double cur_q_val = q_vals[cur_bucket_inds[0]][cur_bucket_inds[1]][cur_bucket_inds[2]][1];
                             // Figure out the best expected roll
-                            double bust = 0.0;
+                            double bust = bust_init;
                             double min_q_val = INFINITY;
                             int min_index = 0;
                             for (int i = 0; i < 3; i++) {
@@ -129,13 +138,15 @@ class Q_agent {
                                 Board copy_board;
                                 copy_board.init(game_board.dice_size);
                                 copy_board.clone(game_board);
-                                if (copy_board.goes_bust(pairs[i][0], pairs[i][1])) {
-                                    bust = stop_reward;
-                                }
                                 copy_board.make_move(pairs[i][0], pairs[i][1]);
+                                // If the move makes you go bust, store the penalty and give the turn back (solitaire for training)
+                                if (copy_board.turn != game_board.turn) {
+                                    bust = stop_reward;
+                                    copy_board.end_turn();
+                                }
                                 // Get bucket of next state
                                 vector<int> possible_next_bucket = get_bucket_helper(copy_board);
-                                // Get min of two actions from that bucket
+                                // Get min of two actions (stop or roll) from that bucket
                                 double next_q_val_stop = q_vals[possible_next_bucket[0]][possible_next_bucket[1]][possible_next_bucket[2]][0];
                                 double next_q_val_roll = q_vals[possible_next_bucket[0]][possible_next_bucket[1]][possible_next_bucket[2]][1];
                                 double next_q_val = min(next_q_val_roll, next_q_val_stop) + bust;
@@ -150,8 +161,15 @@ class Q_agent {
                             if (r < epsilon) {
                                 min_index = rand() % 3;
                             }
+                            int current_turn = game_board.turn;
                             // Make the move and update q vals
                             game_board.make_move(pairs[min_index][0], pairs[min_index][1]);
+                            // If the move makes the player go bust, give the turn back
+                            bust = bust_init;
+                            if (game_board.turn != current_turn) {
+                                game_board.end_turn();
+                                bust = stop_reward;
+                            }
                             // Get the next bucket
                             vector<int> next_bucket = get_bucket_helper(game_board);
                             // Get the values of the two moves in that bucket
@@ -159,12 +177,11 @@ class Q_agent {
                             double next_q_val_roll = q_vals[next_bucket[0]][next_bucket[1]][next_bucket[2]][1];
                             // Choose the better of the two
                             double next_q_val = min(next_q_val_roll, next_q_val_stop);
+                            if (game_board.game_over() != -1) {
+                                next_q_val = min(0.0, next_q_val);
+                            }
                             // Update the current q_val (accounting for bust if that occurs)
                             q_vals[cur_bucket_inds[0]][cur_bucket_inds[1]][cur_bucket_inds[2]][1] = cur_q_val + alpha * (bust + gamma * (next_q_val - cur_q_val));
-                            // If the player did go bust, return the turn to them (solitaire game for training)
-                            if (bust > 0) {
-                                game_board.end_turn();
-                            }
                         }
                     }
                     // If r is greater than epsilon, then exploit
@@ -191,7 +208,7 @@ class Q_agent {
                             // Current q value is value of rolling from current state
                             double cur_q_val = q_vals[cur_bucket_inds[0]][cur_bucket_inds[1]][cur_bucket_inds[2]][1];
                             // Figure out the best expected roll
-                            double bust = 0.0;
+                            double bust = bust_init;
                             double min_q_val = INFINITY;
                             int min_index = 0;
                             for (int i = 0; i < 3; i++) {
@@ -199,10 +216,12 @@ class Q_agent {
                                 Board copy_board;
                                 copy_board.init(game_board.dice_size);
                                 copy_board.clone(game_board);
-                                if (copy_board.goes_bust(pairs[i][0], pairs[i][1])) {
-                                    bust = 0.5;
-                                }
                                 copy_board.make_move(pairs[i][0], pairs[i][1]);
+                                // If the move makes the player go bust, give the turn back (solitaire for training)
+                                if (game_board.turn != copy_board.turn) {
+                                    bust = stop_reward;
+                                    copy_board.end_turn();
+                                }
                                 // Get bucket of next state
                                 vector<int> possible_next_bucket = get_bucket_helper(copy_board);
                                 // Get min of two actions from that bucket
@@ -221,7 +240,14 @@ class Q_agent {
                                 min_index = min_index = rand() % 3;;
                             }
                             // Make the move and update q vals
+                            int current_turn = game_board.turn;
                             game_board.make_move(pairs[min_index][0], pairs[min_index][1]);
+                            // If the player goes bust, give the turn back and set the bust value
+                            bust = bust_init;
+                            if (game_board.turn != current_turn) {
+                                bust = stop_reward;
+                                game_board.end_turn();
+                            }
                             // Get the next bucket
                             vector<int> next_bucket = get_bucket_helper(game_board);
                             // Get the values of the two moves in that bucket
@@ -229,19 +255,18 @@ class Q_agent {
                             double next_q_val_roll = q_vals[next_bucket[0]][next_bucket[1]][next_bucket[2]][1];
                             // Choose the better of the two
                             double next_q_val = min(next_q_val_roll, next_q_val_stop);
+                            if (game_board.game_over() != -1) {
+                                next_q_val = min(0.0, next_q_val);
+                            }
                             // Update the current q_val (accounting for bust if that occurs)
                             q_vals[cur_bucket_inds[0]][cur_bucket_inds[1]][cur_bucket_inds[2]][1] = cur_q_val + alpha * (bust + gamma * (next_q_val - cur_q_val));
-                            // If the player did go bust, return the turn to them (solitaire game for training)
-                            if (bust > 0) {
-                                game_board.end_turn();
-                            }
                         }
                     }
                 }
                 // Reset the game_board
                 game_board.reset_board();
             }
-            dump_q_vals();
+            // dump_q_vals();
             std::cout << "NUMBER OF GAMES SIMULATED = " << game_count << "\n";
             return 1;
         }
@@ -323,8 +348,9 @@ class Q_agent {
             int mid_column = (num_columns+1)/2;
             vector<double> column_lengths = {3.0, 5.0, 7.0, 9.0, 11.0, 13.0};
             // Keep track of the three bucket indicators:
-                // Total runner progress
-                // Top three runner progress
+                // Top three column progress
+                // Progress in all other columns as a factor of top three progress
+                    // % progress in all other columns / % progress in top three columns
                 // Distance between runners and stops
             double total_progress = 0.0;
             vector<double> top_three_progress = {0.0, 0.0, 0.0};
@@ -357,11 +383,18 @@ class Q_agent {
                 }
             }
             // Normalize the values found and return the bucket
-            total_progress = total_progress / double(num_columns);
-            double top_three_progress_val = accumulate(top_three_progress.begin(), top_three_progress.end(), 0.0);
+            double top_three_progress_val = 0;
+            for (int i = 0; i < 3; i++) {
+                total_progress -= top_three_progress[i];
+                top_three_progress_val += top_three_progress[i];
+            }
+            total_progress = total_progress / double(num_columns - 3);
             top_three_progress_val = top_three_progress_val / 3.0;
+            if (top_three_progress_val != 0) {
+                total_progress = total_progress / top_three_progress_val;
+            }
             double runner_diffs = accumulate(runner_diff_percentages.begin(), runner_diff_percentages.end(), 0.0) / 3;
-            vector<int> return_vals = {int(trunc(total_progress*10)), int(trunc(top_three_progress_val*10)), int(trunc(runner_diffs*10))};
+            vector<int> return_vals = {int(trunc(top_three_progress_val*10)), int(trunc(total_progress*10)), int(trunc(runner_diffs*10))};
             // If any normalized value is exactly 1.0, there would be a seg fault as we try to access too far out. (Just include these in previous bucket)
             for (int i = 0; i < 3; i++) {
                 if (return_vals[i] == 10) {
