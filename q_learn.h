@@ -192,8 +192,9 @@ class Q_agent {
                         // See which action has best expected result
                         double stop_val = q_vals[cur_bucket_inds[0]][cur_bucket_inds[1]][cur_bucket_inds[2]][0];
                         double roll_val = q_vals[cur_bucket_inds[0]][cur_bucket_inds[1]][cur_bucket_inds[2]][1];
-                        // If stopping is best, stop and update
-                        if (stop_val < roll_val) {
+                        double stop_equal_rand = ((double)rand() / (RAND_MAX));
+                        // If stopping is best, stop and update, OR if stopping is no worse, stop half of the time
+                        if ((stop_val < roll_val) || ((stop_val == roll_val) && (stop_equal_rand < 0.5))) {
                             game_board.end_turn();
                             // cur_q_val is q val for stopping in current state
                             double cur_q_val = q_vals[cur_bucket_inds[0]][cur_bucket_inds[1]][cur_bucket_inds[2]][0];
@@ -285,6 +286,14 @@ class Q_agent {
             if (stop_val < roll_val) {
                 game_board.end_turn();
                 return game_board;
+            }
+            // If stopping is no different from rolling, stop half of the time, roll half of the time
+            if (stop_val == roll_val) {
+                double r = ((double)rand() / (RAND_MAX));
+                if (r < 0.5) {
+                    game_board.end_turn();
+                    return game_board;
+                }
             }
             // Otherwise, roll, get pairs and then see which move would result in best q_val
             vector<int> roll = game_board.get_roll();

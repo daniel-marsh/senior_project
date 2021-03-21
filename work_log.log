@@ -30,9 +30,10 @@ Q-Learning Agent
 03/16	6:00PM		6:30PM		0:30		Fixed seg fault. Is not yet a good agent. Need to tune. Will tune before initializing.
 03/20	11:30AM		5:00PM		5:30		Tuned q_learning. Tested with and without initializing. 
 03/21	1:30PM		4:30PM		3:00		Tuned q_learning. Tested and noted results.
-				 Total: 19:00
+03/21	5:30PM		6:30PM		1:00 		Tested q_learning.
+				 Total: 20:00
 
-PROJECT TOTAL:  53:00
+PROJECT TOTAL:  54:00
 
 
 
