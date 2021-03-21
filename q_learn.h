@@ -96,10 +96,13 @@ class Q_agent {
             int game_count = 0;
             // While there is time left, train
             while(time(NULL) - start < seconds) {
+                // After a certain number of games, reduce the exploration rate (epsilon) and the learning rate (alpha)
                 if (game_count % 1000 == 0) {
                     epsilon = epsilon / 2;
-                    std::cout << "Trained on " << game_count << " simulations: ";
-                    std::cout << seconds - int(trunc(time(NULL) - start)) << " seconds of training remaining\n";
+                    // alpha = alpha * 0.9;
+                    // DEBUG PRINTS
+                    // std::cout << "Trained on " << game_count << " simulations: ";
+                    // std::cout << seconds - int(trunc(time(NULL) - start)) << " seconds of training remaining\n";
                 }
                 game_count++;
                 // Play the game to a terminal state
@@ -267,7 +270,7 @@ class Q_agent {
                 game_board.reset_board();
             }
             // dump_q_vals();
-            std::cout << "NUMBER OF GAMES SIMULATED = " << game_count << "\n";
+            // std::cout << "NUMBER OF GAMES SIMULATED = " << game_count << "\n";
             return 1;
         }
 
@@ -302,7 +305,6 @@ class Q_agent {
             }
             // Make the best estimated move and return the resulting game board
             game_board.make_move(pairs[min_index][0], pairs[min_index][1]);
-            game_board.end_turn();
             return game_board;
         }
 
