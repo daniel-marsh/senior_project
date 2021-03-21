@@ -28,7 +28,7 @@ void q_testing(char** argv) {
     function<Board(Board)> make_player0_move;
     function<Board(Board)> make_player1_move;
 
-    for (int timer_update = 10; timer_update < 11; timer_update++) {
+    for (int timer_update = 1; timer_update < 10; timer_update++) {
         q_train_time = timer_update * 10;
         std::cout << q_train_time << " SECONDS OF TRAINING\n";
         double avg_win_perc0 = 0.0;
