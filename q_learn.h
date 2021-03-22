@@ -84,22 +84,33 @@ class Q_agent {
             Board game_board;
             game_board.init(dice_size);
             // Training parameters 
-            double epsilon = 0.3;
+            double epsilon = 0.5;
+            double min_epsilon = 0.1;
             double alpha = 0.1;
             double gamma = 0.99;
+            double e_decay = 0.99;
             // The penalty for stopping or going bust
-            double stop_reward = 0.025;
+            double stop_reward = 0.02;
             // The reward for successfully rolling
-            double bust_init = -0.025;
+            double bust_init = -0.04;
+            // Cost for going bust
+            double bust_cost = 0.01;
+            // Reward for winning
+            double win_reward = -1.0;
+
+            // stop_reward = 0;
+            // bust_init = 0;
+            // bust_cost = 0;
+
             // Time to stop training
             time_t start = time(NULL);
-            int game_count = 0;
+            int game_count = 1;
             // While there is time left, train
             while(time(NULL) - start < seconds) {
-                // After a certain number of games, reduce the exploration rate (epsilon) and the learning rate (alpha)
-                if (game_count % 1000 == 0) {
-                    epsilon = epsilon / 2;
-                    // alpha = alpha * 0.9;
+                // After a certain number of games, reduce the exploration rate (epsilon)
+                
+                if ((epsilon > min_epsilon) && (game_count % seconds == 0)) {
+                    epsilon = epsilon * e_decay;
                     // DEBUG PRINTS
                     // std::cout << "Trained on " << game_count << " simulations: ";
                     // std::cout << seconds - int(trunc(time(NULL) - start)) << " seconds of training remaining\n";
@@ -117,12 +128,16 @@ class Q_agent {
                         // Stop half of the time, 
                         if (r < 0.5) {
                             game_board.end_turn();
+                            double reward_shape = stop_reward;
+                            if (game_board.game_over() != -1) {
+                                reward_shape = win_reward;
+                            }
                             // cur_q_val is q val for stopping in current state
                             double cur_q_val = q_vals[cur_bucket_inds[0]][cur_bucket_inds[1]][cur_bucket_inds[2]][0];
                             // next_q_val is q val of rolling in next state (next state is same as current state except runner_diffs = 0)
                             double next_q_val = q_vals[cur_bucket_inds[0]][cur_bucket_inds[1]][0][1];
                             // Update current q_val
-                            q_vals[cur_bucket_inds[0]][cur_bucket_inds[1]][cur_bucket_inds[2]][0] = cur_q_val + alpha * (stop_reward + gamma * (next_q_val - cur_q_val));
+                            q_vals[cur_bucket_inds[0]][cur_bucket_inds[1]][cur_bucket_inds[2]][0] = cur_q_val + alpha * (reward_shape + gamma * (next_q_val - cur_q_val));
                             // Then give the turn back (solitaire game mode for training)
                             game_board.end_turn();
                         }
@@ -133,9 +148,9 @@ class Q_agent {
                             // Current q value is value of rolling from current state
                             double cur_q_val = q_vals[cur_bucket_inds[0]][cur_bucket_inds[1]][cur_bucket_inds[2]][1];
                             // Figure out the best expected roll
-                            double bust = bust_init;
                             double min_q_val = INFINITY;
                             int min_index = 0;
+                            vector<double> bust_ind = {bust_init, bust_init, bust_init};
                             for (int i = 0; i < 3; i++) {
                                 // Copy the board and play out the move
                                 Board copy_board;
@@ -144,7 +159,7 @@ class Q_agent {
                                 copy_board.make_move(pairs[i][0], pairs[i][1]);
                                 // If the move makes you go bust, store the penalty and give the turn back (solitaire for training)
                                 if (copy_board.turn != game_board.turn) {
-                                    bust = stop_reward;
+                                    bust_ind[i] = bust_cost;
                                     copy_board.end_turn();
                                 }
                                 // Get bucket of next state
@@ -152,39 +167,31 @@ class Q_agent {
                                 // Get min of two actions (stop or roll) from that bucket
                                 double next_q_val_stop = q_vals[possible_next_bucket[0]][possible_next_bucket[1]][possible_next_bucket[2]][0];
                                 double next_q_val_roll = q_vals[possible_next_bucket[0]][possible_next_bucket[1]][possible_next_bucket[2]][1];
-                                double next_q_val = min(next_q_val_roll, next_q_val_stop) + bust;
+                                double next_q_val = min(next_q_val_roll, next_q_val_stop) + bust_ind[i];
                                 // Check if the q value from this roll is better than best seen so far
                                 if (next_q_val < min_q_val) {
                                     min_q_val = next_q_val;
                                     min_index = i;
                                 }
                             }
+                            // Update the current q_val 
+                            q_vals[cur_bucket_inds[0]][cur_bucket_inds[1]][cur_bucket_inds[2]][1] = cur_q_val + alpha * (bust_ind[min_index] + gamma * ((min_q_val-bust_ind[min_index]) - cur_q_val));
+
+
                             // Decide whether to exploit or explore again
-                            r = ((double)rand() / (RAND_MAX));
-                            if (r < epsilon) {
-                                min_index = rand() % 3;
-                            }
+                            // r = ((double)rand() / (RAND_MAX));
+                            // if (r < epsilon) {
+                            //     min_index = rand() % 3;
+                            // }
+
+
                             int current_turn = game_board.turn;
                             // Make the move and update q vals
                             game_board.make_move(pairs[min_index][0], pairs[min_index][1]);
                             // If the move makes the player go bust, give the turn back
-                            bust = bust_init;
                             if (game_board.turn != current_turn) {
                                 game_board.end_turn();
-                                bust = stop_reward;
                             }
-                            // Get the next bucket
-                            vector<int> next_bucket = get_bucket_helper(game_board);
-                            // Get the values of the two moves in that bucket
-                            double next_q_val_stop = q_vals[next_bucket[0]][next_bucket[1]][next_bucket[2]][0];
-                            double next_q_val_roll = q_vals[next_bucket[0]][next_bucket[1]][next_bucket[2]][1];
-                            // Choose the better of the two
-                            double next_q_val = min(next_q_val_roll, next_q_val_stop);
-                            if (game_board.game_over() != -1) {
-                                next_q_val = min(0.0, next_q_val);
-                            }
-                            // Update the current q_val (accounting for bust if that occurs)
-                            q_vals[cur_bucket_inds[0]][cur_bucket_inds[1]][cur_bucket_inds[2]][1] = cur_q_val + alpha * (bust + gamma * (next_q_val - cur_q_val));
                         }
                     }
                     // If r is greater than epsilon, then exploit
@@ -196,12 +203,16 @@ class Q_agent {
                         // If stopping is best, stop and update, OR if stopping is no worse, stop half of the time
                         if ((stop_val < roll_val) || ((stop_val == roll_val) && (stop_equal_rand < 0.5))) {
                             game_board.end_turn();
+                            double reward_shape = stop_reward;
+                            if (game_board.game_over() != -1) {
+                                reward_shape = win_reward;
+                            }
                             // cur_q_val is q val for stopping in current state
                             double cur_q_val = q_vals[cur_bucket_inds[0]][cur_bucket_inds[1]][cur_bucket_inds[2]][0];
                             // next_q_val is q val of rolling in next state (next state is same as current state except runner_diffs = 0)
                             double next_q_val = q_vals[cur_bucket_inds[0]][cur_bucket_inds[1]][0][1];
                             // Update current q_val
-                            q_vals[cur_bucket_inds[0]][cur_bucket_inds[1]][cur_bucket_inds[2]][0] = cur_q_val + alpha * (stop_reward + gamma * (next_q_val - cur_q_val));
+                            q_vals[cur_bucket_inds[0]][cur_bucket_inds[1]][cur_bucket_inds[2]][0] = cur_q_val + alpha * (reward_shape + gamma * (next_q_val - cur_q_val));
                             // Then give the turn back (solitaire game mode for training)
                             game_board.end_turn();
                         }
@@ -212,9 +223,9 @@ class Q_agent {
                             // Current q value is value of rolling from current state
                             double cur_q_val = q_vals[cur_bucket_inds[0]][cur_bucket_inds[1]][cur_bucket_inds[2]][1];
                             // Figure out the best expected roll
-                            double bust = bust_init;
                             double min_q_val = INFINITY;
                             int min_index = 0;
+                            vector<double> bust_ind = {bust_init, bust_init, bust_init};
                             for (int i = 0; i < 3; i++) {
                                 // Copy the board and play out the move
                                 Board copy_board;
@@ -223,7 +234,7 @@ class Q_agent {
                                 copy_board.make_move(pairs[i][0], pairs[i][1]);
                                 // If the move makes the player go bust, give the turn back (solitaire for training)
                                 if (game_board.turn != copy_board.turn) {
-                                    bust = stop_reward;
+                                    bust_ind[i] = bust_cost;
                                     copy_board.end_turn();
                                 }
                                 // Get bucket of next state
@@ -231,39 +242,31 @@ class Q_agent {
                                 // Get min of two actions from that bucket
                                 double next_q_val_stop = q_vals[possible_next_bucket[0]][possible_next_bucket[1]][possible_next_bucket[2]][0];
                                 double next_q_val_roll = q_vals[possible_next_bucket[0]][possible_next_bucket[1]][possible_next_bucket[2]][1];
-                                double next_q_val = min(next_q_val_roll, next_q_val_stop) + bust;
+                                double next_q_val = min(next_q_val_roll, next_q_val_stop) + bust_ind[i];
                                 // Check if the q value from this roll is better than best seen so far
                                 if (next_q_val < min_q_val) {
                                     min_q_val = next_q_val;
                                     min_index = i;
                                 }
                             }
+                            // Update the current q_val (accounting for bust if that occurs)
+                            q_vals[cur_bucket_inds[0]][cur_bucket_inds[1]][cur_bucket_inds[2]][1] = cur_q_val + alpha * (bust_ind[min_index] + gamma * ((min_q_val-bust_ind[min_index]) - cur_q_val));
+                    
+
                             // Decide whether to exploit or explore again
-                            r = ((double)rand() / (RAND_MAX));
-                            if (r < epsilon) {
-                                min_index = min_index = rand() % 3;;
-                            }
+                            // r = ((double)rand() / (RAND_MAX));
+                            // if (r < epsilon) {
+                            //     min_index = min_index = rand() % 3;;
+                            // }
+
+
                             // Make the move and update q vals
                             int current_turn = game_board.turn;
                             game_board.make_move(pairs[min_index][0], pairs[min_index][1]);
-                            // If the player goes bust, give the turn back and set the bust value
-                            bust = bust_init;
+                            // If the player goes bust, give the turn back
                             if (game_board.turn != current_turn) {
-                                bust = stop_reward;
                                 game_board.end_turn();
                             }
-                            // Get the next bucket
-                            vector<int> next_bucket = get_bucket_helper(game_board);
-                            // Get the values of the two moves in that bucket
-                            double next_q_val_stop = q_vals[next_bucket[0]][next_bucket[1]][next_bucket[2]][0];
-                            double next_q_val_roll = q_vals[next_bucket[0]][next_bucket[1]][next_bucket[2]][1];
-                            // Choose the better of the two
-                            double next_q_val = min(next_q_val_roll, next_q_val_stop);
-                            if (game_board.game_over() != -1) {
-                                next_q_val = min(0.0, next_q_val);
-                            }
-                            // Update the current q_val (accounting for bust if that occurs)
-                            q_vals[cur_bucket_inds[0]][cur_bucket_inds[1]][cur_bucket_inds[2]][1] = cur_q_val + alpha * (bust + gamma * (next_q_val - cur_q_val));
                         }
                     }
                 }
@@ -272,6 +275,7 @@ class Q_agent {
             }
             // dump_q_vals();
             // std::cout << "NUMBER OF GAMES SIMULATED = " << game_count << "\n";
+            std::cout << epsilon << "\n";
             return 1;
         }
 
