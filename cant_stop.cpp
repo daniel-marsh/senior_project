@@ -29,11 +29,11 @@ void q_testing(char** argv) {
     function<Board(Board)> make_player1_move;
 
     for (int timer_update = 1; timer_update < 10; timer_update++) {
-        q_train_time = timer_update * 10;
+        q_train_time = timer_update * 2;
         std::cout << q_train_time << " SECONDS OF TRAINING\n";
         double avg_win_perc0 = 0.0;
         double avg_win_perc1 = 0.0;
-        for (int test_count = 0; test_count < 5; test_count++) {
+        for (int test_count = 0; test_count < 20; test_count++) {
             std::cout << "    Running test #" << test_count+1 << "\n";
             if ((strcmp(argv[2], "random") == 0) or (strcmp(argv[2], "-r") == 0)) {
                 player0_name = "Random Agent";
@@ -133,8 +133,8 @@ void q_testing(char** argv) {
             std::cout << "        " << player1_name << " won " << p1_win_percentage << "% of games\n";
             std::cout << "\n";
         }
-        avg_win_perc0 = avg_win_perc0 / 5;
-        avg_win_perc1 = avg_win_perc1 / 5;
+        avg_win_perc0 = avg_win_perc0 / 20;
+        avg_win_perc1 = avg_win_perc1 / 20;
         std::cout << "\n\n";
         std::cout << "    WITH " << q_train_time << " SECONDS OF TRAINING:\n";
         std::cout << "        " << player0_name << " won an average of " << avg_win_perc0 << "% of games\n";
