@@ -179,7 +179,7 @@ class Q_agent {
                             double next_q_val = min_q_val-bust_ind[min_index];
                             double reward_shape = bust_ind[min_index];
                             // Update the current q_val (rolling in current bucket)
-                            q_vals[cur_bucket_inds[0]][cur_bucket_inds[1]][cur_bucket_inds[2]][1] = cur_q_val + alpha * (bust_ind[min_index] + gamma * (next_q_val - cur_q_val));
+                            q_vals[cur_bucket_inds[0]][cur_bucket_inds[1]][cur_bucket_inds[2]][1] = cur_q_val + alpha * (reward_shape + gamma * (next_q_val - cur_q_val));
                             // Choose the best pair
                             int current_turn = game_board.turn;
                             // Make the move
