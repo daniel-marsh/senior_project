@@ -92,10 +92,10 @@ class Q_agent {
 
             // TRAINING PARAMS
             double epsilon = 0.3;
-            double min_epsilon = 0.1;
+            double min_epsilon = 0.085;
             // double alpha = 0.1;
             double gamma = 0.99;
-            double e_decay = 0.99;
+            double e_decay = 0.97;
             double a_decay = 0.991;
             // REWARD SHAPING
             // The penalty for stopping or going bust
