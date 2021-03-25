@@ -13,23 +13,29 @@ class Q_agent {
     public:
         // Q values of the buckets
         vector<vector<vector<vector<double>>>> q_vals;
+        vector<vector<vector<vector<double>>>> learning_rate;
         double default_val = 1.0;
+        double alpha_init = 0.47;
         // A function to initialize the q values
         // The values are initialized to 0.5 if no file is given
         // Or, the data in a given file is used to initialize the buckets
         int init(string file_name) {
             vector<vector<vector<int>>> bucket_counts;
             q_vals = vector<vector<vector<vector<double>>>>(10);
+            learning_rate = vector<vector<vector<vector<double>>>>(10);
             bucket_counts = vector<vector<vector<int>>>(10);
             // First set all values to 0.5
             for (int x = 0; x < 10; x++) {
                 q_vals[x] = vector<vector<vector<double>>>(10);
+                learning_rate[x] = vector<vector<vector<double>>>(10);
                 bucket_counts[x] = vector<vector<int>>(10);
                 for (int y = 0; y < 10; y++) {
                     q_vals[x][y] = vector<vector<double>>(10);
+                    learning_rate[x][y] = vector<vector<double>>(10);
                     bucket_counts[x][y] = vector<int>(10);
                     for (int z = 0; z < 10; z++) {
                         q_vals[x][y][z] = {default_val, default_val};
+                        learning_rate[x][y][z] = {alpha_init, alpha_init};
                         bucket_counts[x][y][z] = 0;
                     }
                 }
@@ -85,12 +91,12 @@ class Q_agent {
             game_board.init(dice_size);
 
             // TRAINING PARAMS
-            double epsilon = 0.5;
+            double epsilon = 0.3;
             double min_epsilon = 0.1;
-            double alpha = 0.1;
+            // double alpha = 0.1;
             double gamma = 0.99;
             double e_decay = 0.99;
-
+            double a_decay = 0.991;
             // REWARD SHAPING
             // The penalty for stopping or going bust
             double stop_reward = 0.02;
@@ -135,8 +141,11 @@ class Q_agent {
                             double cur_q_val = q_vals[cur_bucket_inds[0]][cur_bucket_inds[1]][cur_bucket_inds[2]][0];
                             // next_q_val is q val of rolling in next state (next state is same as current state except runner_diffs = 0)
                             double next_q_val = q_vals[cur_bucket_inds[0]][cur_bucket_inds[1]][0][1];
+                            // Get current learning rate, and decrease it for future visits
+                            double cur_alpha = learning_rate[cur_bucket_inds[0]][cur_bucket_inds[1]][cur_bucket_inds[2]][0];
+                            learning_rate[cur_bucket_inds[0]][cur_bucket_inds[1]][cur_bucket_inds[2]][0] = cur_alpha * a_decay;
                             // Update current q_val
-                            q_vals[cur_bucket_inds[0]][cur_bucket_inds[1]][cur_bucket_inds[2]][0] = cur_q_val + alpha * (reward_shape + gamma * (next_q_val - cur_q_val));
+                            q_vals[cur_bucket_inds[0]][cur_bucket_inds[1]][cur_bucket_inds[2]][0] = cur_q_val + cur_alpha * (reward_shape + gamma * (next_q_val - cur_q_val));
                             // Then give the turn back (solitaire game mode for training)
                             game_board.end_turn();
                         }
@@ -178,8 +187,11 @@ class Q_agent {
                             // Get the best next q value and the reward shape
                             double next_q_val = min_q_val-bust_ind[min_index];
                             double reward_shape = bust_ind[min_index];
+                            // Get current learning rate, and decrease it for future visits
+                            double cur_alpha = learning_rate[cur_bucket_inds[0]][cur_bucket_inds[1]][cur_bucket_inds[2]][0];
+                            learning_rate[cur_bucket_inds[0]][cur_bucket_inds[1]][cur_bucket_inds[2]][0] = cur_alpha * a_decay;
                             // Update the current q_val (rolling in current bucket)
-                            q_vals[cur_bucket_inds[0]][cur_bucket_inds[1]][cur_bucket_inds[2]][1] = cur_q_val + alpha * (reward_shape + gamma * (next_q_val - cur_q_val));
+                            q_vals[cur_bucket_inds[0]][cur_bucket_inds[1]][cur_bucket_inds[2]][1] = cur_q_val + cur_alpha * (reward_shape + gamma * (next_q_val - cur_q_val));
                             // Choose the best pair
                             int current_turn = game_board.turn;
                             // Make the move
@@ -207,8 +219,11 @@ class Q_agent {
                             double cur_q_val = q_vals[cur_bucket_inds[0]][cur_bucket_inds[1]][cur_bucket_inds[2]][0];
                             // next_q_val is q val of rolling in next state (next state is same as current state except runner_diffs = 0)
                             double next_q_val = q_vals[cur_bucket_inds[0]][cur_bucket_inds[1]][0][1];
+                            // Get current learning rate, and decrease it for future visits
+                            double cur_alpha = learning_rate[cur_bucket_inds[0]][cur_bucket_inds[1]][cur_bucket_inds[2]][0];
+                            learning_rate[cur_bucket_inds[0]][cur_bucket_inds[1]][cur_bucket_inds[2]][0] = cur_alpha * a_decay;
                             // Update current q_val
-                            q_vals[cur_bucket_inds[0]][cur_bucket_inds[1]][cur_bucket_inds[2]][0] = cur_q_val + alpha * (reward_shape + gamma * (next_q_val - cur_q_val));
+                            q_vals[cur_bucket_inds[0]][cur_bucket_inds[1]][cur_bucket_inds[2]][0] = cur_q_val + cur_alpha * (reward_shape + gamma * (next_q_val - cur_q_val));
                             // Then give the turn back (solitaire game mode for training)
                             game_board.end_turn();
                         }
@@ -249,8 +264,11 @@ class Q_agent {
                             // Get the best next q value and the reward shape
                             double next_q_val = min_q_val-bust_ind[min_index];
                             double reward_shape = bust_ind[min_index];
+                            // Get current learning rate, and decrease it for future visits
+                            double cur_alpha = learning_rate[cur_bucket_inds[0]][cur_bucket_inds[1]][cur_bucket_inds[2]][0];
+                            learning_rate[cur_bucket_inds[0]][cur_bucket_inds[1]][cur_bucket_inds[2]][0] = cur_alpha * a_decay;
                             // Update the current q_val (accounting for bust if that occurs)
-                            q_vals[cur_bucket_inds[0]][cur_bucket_inds[1]][cur_bucket_inds[2]][1] = cur_q_val + alpha * (reward_shape + gamma * (next_q_val - cur_q_val));
+                            q_vals[cur_bucket_inds[0]][cur_bucket_inds[1]][cur_bucket_inds[2]][1] = cur_q_val + cur_alpha * (reward_shape + gamma * (next_q_val - cur_q_val));
                     
                             // Make the move and update q vals
                             int current_turn = game_board.turn;

@@ -33,6 +33,9 @@ void q_testing(char** argv) {
         std::cout << q_train_time << " SECONDS OF TRAINING\n";
         double avg_win_perc0 = 0.0;
         double avg_win_perc1 = 0.0;
+        double low_p1 = 100.0;
+        double high_p1 = 0.0;
+        int below_90_sims = 0;
         for (int test_count = 0; test_count < 20; test_count++) {
             std::cout << "    Running test #" << test_count+1 << "\n";
             if ((strcmp(argv[2], "random") == 0) or (strcmp(argv[2], "-r") == 0)) {
@@ -128,6 +131,15 @@ void q_testing(char** argv) {
             avg_win_perc0 += p0_win_percentage;
             double p1_win_percentage =  double(p1_wins)/double(num_sims)*100.0;
             avg_win_perc1 += p1_win_percentage;
+            if (p1_win_percentage > high_p1) {
+                high_p1 = p1_win_percentage;
+            }
+            if (p1_win_percentage < low_p1) {
+                low_p1 = p1_win_percentage;
+            }
+            if (p1_win_percentage < 90) {
+                below_90_sims++;
+            }
             std::cout << "\n";
             std::cout << "        " << player0_name << " won " << p0_win_percentage << "% of games\n";
             std::cout << "        " << player1_name << " won " << p1_win_percentage << "% of games\n";
@@ -138,7 +150,10 @@ void q_testing(char** argv) {
         std::cout << "\n\n";
         std::cout << "    WITH " << q_train_time << " SECONDS OF TRAINING:\n";
         std::cout << "        " << player0_name << " won an average of " << avg_win_perc0 << "% of games\n";
-        std::cout << "        " << player1_name << " won an average of " << avg_win_perc1 << "% of games\n\n\n";
+        std::cout << "        " << player1_name << " won an average of " << avg_win_perc1 << "% of games\n\n";
+        std::cout << "        " << player1_name << " low = " << low_p1 << "\n";
+        std::cout << "        " << player1_name << " high = " << high_p1 << "\n";
+        std::cout << "        " << player1_name << " had " << below_90_sims << " training sessions where it did not win 90% of games\n\n\n";
     }
     return;
 }
