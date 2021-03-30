@@ -3,7 +3,6 @@
 #include <string>
 #include <cmath>
 #include <numeric>
-#include <iostream>
 #include <fstream>
 #include "board.h"
 using namespace std; 
