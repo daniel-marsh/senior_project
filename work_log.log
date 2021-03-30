@@ -36,7 +36,14 @@ Q-Learning Agent
 03/25	3:30PM		6:30PM		3:00		Added private alpha values. Behaves correctly. 
 				 Total: 30:30
 
-PROJECT TOTAL:  64:30
+LSTM Agent
+03/29	4:00PM		6:00PM 		2:00		Resarch and planning.
+03/30	9:00AM		10:00AM		1:00		Further research.
+03/30	11:30AM		2:00PM		2:30		Getting python to link to C++. Will be used to train LSTM network.
+03/30	2:00PM		3:00PM		1:00		Implemented many simple networks in tensorflow as learning.
+				 Total: 6:30
+
+PROJECT TOTAL:  71:00
 
 
 
