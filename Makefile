@@ -9,6 +9,9 @@ cant_stop: cant_stop.cpp
 
 test_link_c: test_link_c.cpp
 	$(CC) $(CFLAGS) -o test_link_c test_link_c.cpp
+
+load_data: load_data.cpp
+	$(CC) $(CFLAGS) -o load_data load_data.cpp
 	
 clean: 
 	$(RM) cant_stop
