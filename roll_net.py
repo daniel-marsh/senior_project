@@ -10,21 +10,24 @@ from tensorflow.keras.layers.experimental import preprocessing
 
 roll_train = pd.read_csv(
     "roll_training_data.csv",
-    names=["Stop", "Runner", "Free", "Score"])
+    header=0,
+    dtype='float32')
+
+# roll_train = roll_train[1:]
 
 roll_features = roll_train.copy()
-roll_labels = roll_features.pop('Score')
+roll_labels = roll_features.pop('Score Diff')
 
 roll_features = np.array(roll_features)
 
 roll_model = tf.keras.Sequential([
-  layers.Dense(2048),
+  layers.Dense(512),
   layers.Dense(1)
 ])
 
 roll_model.compile(loss = tf.losses.MeanSquaredError(), optimizer = tf.optimizers.Adam())
 
-roll_model.fit(roll_features, roll_labels, epochs=25)
+roll_model.fit(roll_features, roll_labels, epochs=10)
 
 prediction = roll_model.predict(roll_features[:5])
 
