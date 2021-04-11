@@ -1,6 +1,6 @@
 CC = gcc
 CFLAGS = -std=c++17 -lstdc++
-AGENTS = random.cpp simple.cpp flat_mcts.cpp
+AGENTS = random.cpp simple.cpp flat_mcts.cpp lstm.cpp
 
 all: 
 
