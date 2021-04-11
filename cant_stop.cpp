@@ -209,11 +209,11 @@ int main(int argc, char** argv) {
         player0_name = "LSTM Agent";
 
         // Train Roll Choice
-        std::cout << "Training Roll Choice Network\n";
-        string command = "python3 roll_net.py";
-        system(command.c_str());
+        // std::cout << "Training Roll Choice Network\n";
+        // string command = "python3 roll_net.py";
+        // system(command.c_str());
         // Train Stop or Roll
-        std::cout << "Training Stop or Roll Choice Network\n";
+        // std::cout << "Training Stop or Roll Choice Network\n";
         
         make_player0_move = make_lstm_move;
     }
@@ -254,11 +254,11 @@ int main(int argc, char** argv) {
         player1_name = "LSTM Agent";
 
         // Train Roll Choice
-        std::cout << "Training Roll Choice Network\n";
-        string command = "python3 roll_net.py";
-        system(command.c_str());
-        // Train Stop or Roll
-        std::cout << "Training Stop or Roll Choice Network\n";
+        // std::cout << "Training Roll Choice Network\n";
+        // string command = "python3 roll_net.py";
+        // system(command.c_str());
+        // // Train Stop or Roll
+        // std::cout << "Training Stop or Roll Choice Network\n";
         
         make_player1_move = make_lstm_move;
     }
@@ -274,11 +274,16 @@ int main(int argc, char** argv) {
     int p0_wins = 0;
     int p1_wins = 0;
     for (int i = 0; i < num_sims; i++) {
-        if (i % 500 == 0) {
+        if (i % 1 == 0) {
             std::cout << "Simulating game #" << i << "...\n";
         }
         int start_turn = i % 2;
+        int move_num = 0;
         while (game_board.game_over() < 0) {
+            move_num++;
+            if (move_num % 10 == 0) {
+                std:cout << "    Move Number " << move_num << "\n";
+            }
             if (game_board.turn == start_turn) {
                 game_board = make_player0_move(game_board);
             }

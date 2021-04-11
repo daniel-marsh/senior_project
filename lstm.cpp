@@ -3,6 +3,7 @@
 #include <vector>
 #include <string>
 #include <cstring>
+#include <stdio.h>
 #include "board.h"
 #include "lstm.h"
 using namespace std; 
@@ -65,8 +66,11 @@ Board make_lstm_move(Board game_board) {
     ofstream myfile;
     myfile.open("roll_input.txt", ofstream::out | ofstream::trunc);
     for (int i = 0; i < 6; i++) {
-        myfile << sprintf("%lf, %lf, %lf\n", roll_data[i][0], roll_data[i][1], roll_data[i][2]);
+        char buffer [50];
+        sprintf(buffer, "%lf, %lf, %lf\n", roll_data[i][0], roll_data[i][1], roll_data[i][2]);
+        myfile << buffer;
     }
+    myfile.close();
     // Call Roll net to choose roll (pass column data for each roll and take max)
     int max_roll = 0;
     // CALL TO ROLL NET HERE

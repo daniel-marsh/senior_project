@@ -1,3 +1,5 @@
+import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' 
 import numpy as np
 import tensorflow as tf
 from tensorflow import keras
@@ -9,7 +11,7 @@ with open("roll_input.txt", "r") as my_file:
         input_data.append(num_list)
     my_file.close()
 
-input_data = np.array(input_data)
+input_data = np.array(input_data).astype('float32')
 
 roll_model = keras.models.load_model('./model_data/roll_model')
 
@@ -28,5 +30,6 @@ elif max_roll == roll_3_score:
     max_roll_ind = 2
 
 with open("roll_output.txt", "w") as out_file:
-    out_file.write(str(max_roll_ind))
+    max_roll_out = str(max_roll_ind) + "\n"
+    out_file.write(max_roll_out)
     out_file.close()
