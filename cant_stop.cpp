@@ -1,11 +1,13 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <cstring>
 #include "board.h"
 #include "random.h"
 #include "simple.h"
 #include "flat_mcts.h"
 #include "q_learn.h"
+#include "lstm.h"
 using namespace std; 
 
 Q_agent q_learn_agent_0;
@@ -160,9 +162,9 @@ void q_testing(char** argv) {
 
 int main(int argc, char** argv) {
 
-    srand(time(0));
-    q_testing(argv);
-    return 1;
+    // srand(time(0));
+    // q_testing(argv);
+    // return 1;
     int q_train_time = 10;
     string player0_name;
     string player1_name;
@@ -203,6 +205,18 @@ int main(int argc, char** argv) {
         
         make_player0_move = q_agent0_move;
     }
+    else if ((strcmp(argv[2], "lstm") == 0) or (strcmp(argv[2], "-l") == 0)) {
+        player0_name = "LSTM Agent";
+
+        // Train Roll Choice
+        std::cout << "Training Roll Choice Network\n";
+        string command = "python3 roll_net.py";
+        system(command.c_str());
+        // Train Stop or Roll
+        std::cout << "Training Stop or Roll Choice Network\n";
+        
+        make_player0_move = make_lstm_move;
+    }
     else {
         std::cout << "Invalid agent for player 0\n";
         return -1;
@@ -235,6 +249,18 @@ int main(int argc, char** argv) {
         q_learn_agent_1.train(q_train_time, dice_size);
         
         make_player1_move = q_agent1_move;
+    }
+    else if ((strcmp(argv[3], "lstm") == 0) or (strcmp(argv[3], "-l") == 0)) {
+        player1_name = "LSTM Agent";
+
+        // Train Roll Choice
+        std::cout << "Training Roll Choice Network\n";
+        string command = "python3 roll_net.py";
+        system(command.c_str());
+        // Train Stop or Roll
+        std::cout << "Training Stop or Roll Choice Network\n";
+        
+        make_player1_move = make_lstm_move;
     }
     else {
         std::cout << "Invalid agent for player 1\n";

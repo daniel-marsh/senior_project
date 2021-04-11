@@ -59,7 +59,7 @@ vector<vector<double>> training_data(vector<vector<double>> raw_data) {
     vector<vector<double>> formatted_data;
     vector<double> column_lens = {3.0, 5.0, 7.0, 5.0, 7.0};
     std::cout << "    Data to format: " << raw_data.size() << "\n";
-    for (int i = 0; i < 1000; i++) {
+    for (int i = 0; i < raw_data.size(); i++) {
         if (i % 100 == 99) {
             std::cout << "    Line #" << i+1 << "\n";
         }

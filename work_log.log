@@ -42,10 +42,11 @@ LSTM Agent
 03/30	11:30AM		2:00PM		2:30		Getting python to link to C++. Will be used to train LSTM network.
 03/30	2:00PM		3:00PM		1:00		Implemented many simple networks in tensorflow as learning.
 04/10   11:30AM		2:00PM		2:30		Wrote code to generate training data for roll network.
-				 Total: 9:00
+04/11	10:00AM		12:00PM		2:00		Got training data, build structure for make LSTM move.
+				 Total: 11:00
 
 
-PROJECT TOTAL:  73:30
+PROJECT TOTAL:  75:30
 
 
 
