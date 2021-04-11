@@ -12,6 +12,10 @@ test_link_c: test_link_c.cpp
 
 load_data: load_data.cpp
 	$(CC) $(CFLAGS) -o load_data load_data.cpp
+
+load_lstm_data: load_lstm_data.cpp
+	$(CC) $(CFLAGS) -o load_lstm_data load_lstm_data.cpp
+
 	
 clean: 
 	$(RM) cant_stop
