@@ -76,7 +76,7 @@ vector<vector<double>> training_data(vector<vector<double>> raw_data) {
     vector<vector<double>> formatted_data;
     Board game_board;
     game_board.init(3);
-    int num_games = 1000;
+    int num_games = 5;
     int num_diff_rolls = 8;
     for (int game_num = 0; game_num < num_games; game_num++) {
         std::cout << game_num << "\n";
@@ -198,8 +198,7 @@ vector<vector<double>> training_data(vector<vector<double>> raw_data) {
 
 int write_to_csv(vector<vector<double>> formatted_data) {
     ofstream myfile;
-    myfile.open("stop_training_data.csv", ofstream::out | ofstream::trunc);
-    myfile << "SH0,RH0,SH1,RH1,SH2,RH2,SH3,RH3,SH4,RH4,OUTPUT\n";
+    myfile.open("stop_training_data.csv", ofstream::out | ofstream::app);
     for (int i = 0; i < formatted_data.size(); i++) {
         char buffer[100];
         int buf_len = sprintf(buffer, "%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf\n", 
@@ -207,15 +206,19 @@ int write_to_csv(vector<vector<double>> formatted_data) {
                 formatted_data[i][6], formatted_data[i][7], formatted_data[i][8], formatted_data[i][9], formatted_data[i][10]);
         myfile << buffer;
     }
+    myfile.close();
     return 1;
 }
 
 int main(int argc, char** argv) {
+    srand(time(NULL));
     std::cout << "READING IN RAW DATA...\n";
     vector<vector<double>> raw_data = read_in();
-    std::cout << "FORMATTING RAW DATA...\n";
-    vector<vector<double>> formatted_data = training_data(raw_data);
-    std::cout << "WRITING DATA TO CSV...\n";
-    write_to_csv(formatted_data);
+    for (int i = 0; i < 1000000; i++) {
+        std::cout << "FORMATTING RAW DATA...\n";
+        vector<vector<double>> formatted_data = training_data(raw_data);
+        std::cout << "WRITING DATA TO CSV...\n";
+        write_to_csv(formatted_data);
+    }
     return 1;
 }

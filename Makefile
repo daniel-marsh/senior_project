@@ -16,6 +16,8 @@ load_data: load_data.cpp
 load_lstm_data: load_lstm_data.cpp
 	$(CC) $(CFLAGS) -o load_lstm_data load_lstm_data.cpp
 
+format_lstm_data: format_lstm_data.cpp
+	$(CC) $(CFLAGS) -o format_lstm_data format_lstm_data.cpp
 	
 clean: 
 	$(RM) cant_stop

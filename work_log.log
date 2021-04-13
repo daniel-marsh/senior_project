@@ -45,10 +45,11 @@ LSTM Agent
 04/11	10:00AM		12:00PM		2:00		Got training data, build structure for make LSTM move.
 04/11	12:30PM		1:30PM		1:00		Tested roll network.
 04/11	2:00PM		5:00PM		3:00		Worked on generating stop decision data.
-				 Total: 15:00
+04/12	10:00AM		3:00PM		5:00		Trained, incorperated, and tested LSTM.
+				 Total: 20:00
 
 
-PROJECT TOTAL:  79:30
+PROJECT TOTAL:  84:30
 
 
 
