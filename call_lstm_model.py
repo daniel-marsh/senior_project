@@ -12,7 +12,7 @@ with open("lstm_input.txt", "r") as my_file:
         input_data.append(num_list)
     my_file.close()
 
-max_sequence_length = 22
+max_sequence_length = 33
 padded_inputs = pad_sequences(input_data, maxlen=max_sequence_length, value = 0.0)
 
 lstm_model = keras.models.load_model('./model_data/lstm_model')
