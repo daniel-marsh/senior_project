@@ -21,7 +21,7 @@ roll_labels = roll_features.pop('Score Diff')
 roll_features = np.array(roll_features)
 
 roll_model = tf.keras.Sequential([
-  layers.Dense(512),
+  layers.Dense(128),
   layers.Dense(1)
 ])
 

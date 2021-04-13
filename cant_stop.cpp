@@ -278,25 +278,29 @@ int main(int argc, char** argv) {
             std::cout << "Simulating game #" << i << "...\n";
         }
         int start_turn = i % 2;
-        int move_num = 0;
+        int move_num_0 = 0;
+        int move_num_1 = 0;
         while (game_board.game_over() < 0) {
-            move_num++;
-            if (move_num % 10 == 0) {
-                std:cout << "    Move Number " << move_num << "\n";
-            }
             if (game_board.turn == start_turn) {
+                move_num_0++;
+                std::cout << "    P0 making move #" << move_num_0 << "\n";
                 game_board = make_player0_move(game_board);
             }
             else {
+                move_num_1++;
+                std::cout << "    P1 making move #" << move_num_1 << "\n";
                 game_board = make_player1_move(game_board);
             }
+            // std::cout << "END LOOP\n";
         }
         int winner = game_board.game_over();
         if (winner == start_turn) {
+            std::cout << "P0 wins\n";
             p0_wins++;
         }
         else {
             p1_wins++;
+            std::cout << "P1 wins\n";
         }
         game_board.reset_board();
     }
