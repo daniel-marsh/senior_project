@@ -47,8 +47,10 @@ Board make_lstm_move(Board game_board) {
         int istop_val = floor((istop_perc * 100.0) + 2.0);
         // Set runner positions by default to stop position
         int irun_val = istop_val + 101;
+        int iprob_val = floor((game_board.column_probs[i] * 100.0) + 204.0);
         format_in.push_back(istop_val);
         format_in.push_back(irun_val);
+        format_in.push_back(iprob_val);
     }
     // Check runners
     for (int i = 0; i < 3; i++) {
@@ -57,7 +59,7 @@ Board make_lstm_move(Board game_board) {
         if (runner_col != -1) {
             double runner_perc = runner_pos / double(game_board.len_columns[runner_col]);
             int runner_val = floor((runner_perc * 100.0) + 103.0);
-            format_in[(2*runner_col)+1] = runner_val;
+            format_in[(3*runner_col)+1] = runner_val;
         }
     }
     // std::cout << "SENDING TO FILE\n";
@@ -88,7 +90,7 @@ Board make_lstm_move(Board game_board) {
     std::cout << "           Output val: " << roll_stop << "\n";
 
     // If network is less than conf_val% confident with rolling, then stop some percenatage of the time
-    double conf_val = 0.2;
+    double conf_val = 0.29;
     if (roll_stop < conf_val) {
         int rand_choice = rand() % 3;
         if (rand_choice != 0) {

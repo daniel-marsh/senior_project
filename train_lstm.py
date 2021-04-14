@@ -14,8 +14,8 @@ additional_metrics = ['accuracy']
 batch_size = 256
 embedding_output_dims = 15
 loss_function = BinaryCrossentropy()
-max_sequence_length = 22
-num_distinct_words = 204
+max_sequence_length = 33
+num_distinct_words = 305
 number_of_epochs = 5
 optimizer = Adam()
 validation_split = 0
@@ -43,7 +43,7 @@ padded_inputs = pad_sequences(training_features, maxlen=max_sequence_length, val
 # Define the Keras model
 model = Sequential()
 model.add(Embedding(num_distinct_words, embedding_output_dims, input_length=max_sequence_length))
-model.add(LSTM(25))
+model.add(LSTM(8))
 model.add(Dense(1, activation='sigmoid'))
 
 # Compile the model
