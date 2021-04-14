@@ -40,14 +40,6 @@ Board make_lstm_move(Board game_board) {
     // Generate formatted input data to LSTM network
     // std::cout << "GENERATING INPUT\n";
     vector<int> format_in;
-    vector<double> prob_vals;
-    double denom = double(game_board.dice_size)*double(game_board.dice_size);
-    for (int i = 1; i < game_board.dice_size+1; i++) {
-        prob_vals.push_back((double(i)/denom)*175.0/64.0);
-    }
-    for (int i = game_board.dice_size-2; i >= 0; i--) {
-        prob_vals.push_back(prob_vals[i]);
-    }
     // Get stop positions
     for (int i = 0; i < game_board.num_columns; i++) {
         // Get the stop positions
@@ -55,7 +47,7 @@ Board make_lstm_move(Board game_board) {
         int istop_val = floor((istop_perc * 100.0) + 2.0);
         // Set runner positions by default to stop position
         int irun_val = istop_val + 101;
-        int iprob_val = floor((prob_vals[i]*100.0) + 204.0);
+        int iprob_val = floor((game_board.column_probs[i] * 100.0) + 204.0);
         format_in.push_back(istop_val);
         format_in.push_back(irun_val);
         format_in.push_back(iprob_val);

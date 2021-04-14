@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <set>
 using namespace std; 
 
 #ifndef BOARD_H
@@ -15,18 +16,45 @@ class Board {
         vector<vector<int>> stop_positions;
         vector<int> len_columns;
         vector<int> base_column_len = {3, 5, 7, 9, 11, 13};
+        vector<double> column_probs;
         // Setup the values of all pieces on the board
         int init(int given_dice_size) {
+            vector<double> column_counts;
             dice_size = given_dice_size;
             num_columns = (dice_size * 2) - 1;
             int middle_column = (num_columns / 2) + 1;
             for (int i = 0; i < middle_column; i++) {
                 len_columns.push_back(base_column_len[i]);
                 stop_positions.push_back({0, 0});
+                column_counts.push_back(0.0);
             }
             for (int i = 0; i + middle_column < num_columns; i++){
                 len_columns.push_back(base_column_len[middle_column - i - 2]);
                 stop_positions.push_back({0, 0});
+                column_counts.push_back(0.0);
+            }
+            for (int a = 0; a < dice_size; a++) {
+                for (int b = 0; b < dice_size; b++) {
+                    for (int c = 0; c < dice_size; c++) {
+                        for (int d = 0; d < dice_size; d++) {
+                            set<double> combos;
+                            combos.insert(double(a + b));
+                            combos.insert(double(a + c));
+                            combos.insert(double(a + d));
+                            combos.insert(double(b + c));
+                            combos.insert(double(b + d));
+                            combos.insert(double(c + d));
+                            vector<double> combos_vec(combos.begin(), combos.end());
+                            for (int i = 0; i < combos.size(); i++) {
+                                column_counts[combos_vec[i]]++;
+                            }
+                        }
+                    }
+                }
+            }
+            for (int i = 0; i < num_columns; i++) {
+                double total_rolls = double(dice_size*dice_size*dice_size*dice_size);
+                column_probs.push_back(column_counts[i]/total_rolls);
             }
             return 1;
         }

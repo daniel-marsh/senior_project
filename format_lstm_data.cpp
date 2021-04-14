@@ -11,9 +11,9 @@ using namespace std;
 // A TensorFlow LSTM network can only take integer values as input so the data must be reformtted
 int main(int argc, char** argv) {
 
-    double col0_prob = 175.0/64.0/9.0;
-    double col1_prob = 2.0*175.0/64.0/9.0;
-    double col2_prob = 3.0*175.0/64.0/9.0;
+    double col0_prob = 33.0/81.0;
+    double col1_prob = 50.0/81;
+    double col2_prob = 70.0/81.0;
     vector<double> col_probs = {col0_prob, col1_prob, col2_prob, col1_prob, col0_prob};
 
     // Read in the data
