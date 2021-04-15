@@ -295,12 +295,12 @@ int main(int argc, char** argv) {
         }
         int winner = game_board.game_over();
         if (winner == start_turn) {
-            // std::cout << "P0 wins\n";
+            std::cout << "P0 wins\n";
             p0_wins++;
         }
         else {
             p1_wins++;
-            // std::cout << "P1 wins\n";
+            std::cout << "P1 wins\n";
         }
         game_board.reset_board();
     }

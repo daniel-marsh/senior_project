@@ -68,4 +68,4 @@ print(training_labels[:25])
 print("PREDICTIONS")
 print(predictions[:25])
 
-model.save('./model_data/lstm_model')
+model.save('./model_data/test_lstm_model')
