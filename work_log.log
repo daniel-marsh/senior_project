@@ -46,10 +46,13 @@ LSTM Agent
 04/11	12:30PM		1:30PM		1:00		Tested roll network.
 04/11	2:00PM		5:00PM		3:00		Worked on generating stop decision data.
 04/12	10:00AM		3:00PM		5:00		Trained, incorperated, and tested LSTM.
-				 Total: 20:00
+04/13   2:00PM		5:00PM		3:00		Modified inputs.
+04/14	8:30PM		10:30PM		2:00		Got it to play effectively.
+04/15	9:30AM		12:00PM		2:30		Tuned LSTM model.
+				 Total: 27:30
 
 
-PROJECT TOTAL:  84:30
+PROJECT TOTAL:  92:00
 
 
 

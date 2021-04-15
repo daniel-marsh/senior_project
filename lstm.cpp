@@ -90,15 +90,17 @@ Board make_lstm_move(Board game_board) {
     std::cout << "           Output val: " << roll_stop << "\n";
 
     // If network is less than conf_val% confident with rolling, then stop some percenatage of the time
-    double conf_val = 0.9;
+    double conf_val = 0.99;
     if (roll_stop < conf_val) {
-        game_board.end_turn();
-        return game_board;
-        // int rand_choice = rand() % 5;
-        // if (rand_choice != 0) {
-        //     game_board.end_turn();
-        //     return game_board;
-        // }
+        // game_board.end_turn();
+        // return game_board;
+        int uncert = ceil((1.0 - roll_stop)*15.0) + 1;
+        // std::cout << uncert << "\n";
+        int rand_choice = rand() % uncert;
+        if (rand_choice != 0) {
+            game_board.end_turn();
+            return game_board;
+        }
     }
 
     // Roll Choice (if not stop)
