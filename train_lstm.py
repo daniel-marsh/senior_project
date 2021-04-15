@@ -11,12 +11,12 @@ import numpy as np
 
 # Model configuration
 additional_metrics = ['accuracy']
-batch_size = 256
-embedding_output_dims = 15
+batch_size = 64
+# embedding_output_dims = 15
 loss_function = BinaryCrossentropy()
-max_sequence_length = 33
-num_distinct_words = 305
-number_of_epochs = 5
+# max_time_steps = 11
+# num_distinct_words = 305
+number_of_epochs = 20
 optimizer = Adam()
 validation_split = 0
 verbosity_mode = 1
@@ -35,15 +35,19 @@ training_labels = training_features.pop('OUTPUT')
 
 training_features = np.array(training_features)
 
-# Pad all sequences
-padded_inputs = pad_sequences(training_features, maxlen=max_sequence_length, value = 0.0) # 0.0 because it corresponds with <PAD>
+
+# padded_inputs = pad_sequences(training_features, maxlen=max_time_steps*3, value = 0.0) # 0.0 because it corresponds with <PAD>
+num_training_cases = training_features.shape[0]
+num_columns = int(training_features.shape[1]/3)
+
+training_features = np.reshape(training_features, (num_training_cases, num_columns, 3))
+print(training_features[0])
 
 # print(padded_inputs[0])
 
-# Define the Keras model
+# Define the model
 model = Sequential()
-model.add(Embedding(num_distinct_words, embedding_output_dims, input_length=max_sequence_length))
-model.add(LSTM(8))
+model.add(LSTM(8, input_shape=(None,3)))
 model.add(Dense(1, activation='sigmoid'))
 
 # Compile the model
@@ -53,10 +57,10 @@ model.compile(optimizer=optimizer, loss=loss_function, metrics=additional_metric
 model.summary()
 
 # Train the model
-history = model.fit(padded_inputs, training_labels, batch_size=batch_size, epochs=number_of_epochs, verbose=verbosity_mode, validation_split=validation_split)
+model.fit(training_features, training_labels, batch_size=batch_size, epochs=number_of_epochs, verbose=verbosity_mode, validation_split=validation_split)
 
 # See some predictions
-predictions = model.predict(padded_inputs[:25])
+predictions = model.predict(training_features[:25])
 
 print("EXPECTED")
 print(training_labels[:25])
