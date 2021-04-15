@@ -39,18 +39,18 @@ Board make_lstm_move(Board game_board) {
 
     // Generate formatted input data to LSTM network
     // std::cout << "GENERATING INPUT\n";
-    vector<int> format_in;
+    vector<double> format_in;
     // Get stop positions
     for (int i = 0; i < game_board.num_columns; i++) {
         // Get the stop positions
         double istop_perc = double(game_board.stop_positions[i][turn])/double(game_board.len_columns[i]);
-        int istop_val = floor((istop_perc * 100.0) + 2.0);
+        // int istop_val = floor((istop_perc * 100.0) + 2.0);
         // Set runner positions by default to stop position
-        int irun_val = istop_val + 101;
-        int iprob_val = floor((game_board.column_probs[i] * 100.0) + 204.0);
-        format_in.push_back(istop_val);
-        format_in.push_back(irun_val);
-        format_in.push_back(iprob_val);
+        // int irun_val = istop_val + 101;
+        // int iprob_val = floor((game_board.column_probs[i] * 100.0) + 204.0);
+        format_in.push_back(istop_perc);
+        format_in.push_back(istop_perc);
+        format_in.push_back(game_board.column_probs[i]);
     }
     // Check runners
     for (int i = 0; i < 3; i++) {
@@ -58,8 +58,8 @@ Board make_lstm_move(Board game_board) {
         double runner_pos = double(game_board.runner_positions[i][1]);
         if (runner_col != -1) {
             double runner_perc = runner_pos / double(game_board.len_columns[runner_col]);
-            int runner_val = floor((runner_perc * 100.0) + 103.0);
-            format_in[(3*runner_col)+1] = runner_val;
+            // int runner_val = floor((runner_perc * 100.0) + 103.0);
+            format_in[(3*runner_col)+1] = runner_perc;
         }
     }
     // std::cout << "SENDING TO FILE\n";
@@ -67,12 +67,12 @@ Board make_lstm_move(Board game_board) {
     ofstream lstmfile;
     lstmfile.open("lstm_input.txt", ofstream::out | ofstream::trunc);
     for (int i = 0; i < format_in.size()-1; i++) {
-        char buffer [10];
-        sprintf(buffer, "%d,", format_in[i]);
+        char buffer [20];
+        sprintf(buffer, "%lf,", format_in[i]);
         lstmfile << buffer;
     }
-    char buffer [10];
-    sprintf(buffer, "%d\n", format_in[format_in.size()-1]);
+    char buffer [20];
+    sprintf(buffer, "%lf\n", format_in[format_in.size()-1]);
     lstmfile << buffer;
     lstmfile.close();
 
@@ -90,13 +90,15 @@ Board make_lstm_move(Board game_board) {
     std::cout << "           Output val: " << roll_stop << "\n";
 
     // If network is less than conf_val% confident with rolling, then stop some percenatage of the time
-    double conf_val = 0.29;
+    double conf_val = 0.9;
     if (roll_stop < conf_val) {
-        int rand_choice = rand() % 3;
-        if (rand_choice != 0) {
-            game_board.end_turn();
-            return game_board;
-        }
+        game_board.end_turn();
+        return game_board;
+        // int rand_choice = rand() % 5;
+        // if (rand_choice != 0) {
+        //     game_board.end_turn();
+        //     return game_board;
+        // }
     }
 
     // Roll Choice (if not stop)

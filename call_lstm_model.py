@@ -12,13 +12,17 @@ with open("lstm_input.txt", "r") as my_file:
         input_data.append(num_list)
     my_file.close()
 
-max_sequence_length = 33
-padded_inputs = pad_sequences(input_data, maxlen=max_sequence_length, value = 0.0)
+
+num_columns = int(len(input_data[0])/3)
+input_data = np.array(input_data)
+# print(input_data)
+
+input_features = np.reshape(input_data, (1, num_columns, 3))
 
 lstm_model = keras.models.load_model('./model_data/lstm_model')
 
 # Prediction will be a list of lists with only one total entry
-prediction = lstm_model.predict(padded_inputs)
+prediction = lstm_model.predict(input_features)
 
 score = prediction[0][0]
 
