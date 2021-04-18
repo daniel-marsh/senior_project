@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h1>Transfer Learning for Can't Stop</h1>
+<h3>Author: Daniel Marsh</h3>
+<h3>Advisor: James Glenn</h3>
+
+<h3>Abstract</h3>
+
+<p>Many important tools in machine learning and artificial intelligence today were originally designed to play games. From Nimatron in 1940 to DeepMind’s AlphaStar in 2019, game-playing agents have always tested the limits of machine learning and artificial intelligence. This project takes its inspiration from this rich history and explores transfer learning through the lens of the board game Can’t Stop. This report outlines three different transfer learning techniques and analyzes each technique’s ability to learn successful strategies when playing Can’t Stop.  </p>
+
+<p>This project explores transfer learning through three different techniques: Q-Learning; Long-Short Term Memory networks; and Autoencoder networks. For each approach, an agent is provided with some information about a smaller version of the game with only three-sided dice and is then tested on the full version of the game with six-sided dice. The Q-Learning agent uses a bucketing scheme to generalize between versions of the game and initially populates these buckets with the optimal move values for the smaller game. The agent is then allowed some brief training time on the full version of the game before being tested. The LSTM agent is trained using optimal moves at each state for the smaller game before being tested on the full game. Finally, the Autoencoder agent is trained to generate a shared representation of the game state regardless of the number of sides on the dice. A second neural network is then trained with the optimal moves for the smaller game, taking as input the encoded board states and producing as output an estimate of the optimal move from that state. This combination of encoder and traditional neural network is then tested on the full game. This report evaluates the successes and shortcomings of each of these transfer learning techniques when applied to the board game Can’t Stop. </p>
+
+
+<br>
+<a href="./djm233_project_proposal.pdf">Project Proposal</a><br>
+<a href="./djm233_final_report.pdf">Final Report</a><br>
+<a href="https://github.com/daniel-marsh/senior_project">Github Repository</a><br>
+
+</body>
+</html>
+  
