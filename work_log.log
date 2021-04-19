@@ -49,10 +49,16 @@ LSTM Agent
 04/13   2:00PM		5:00PM		3:00		Modified inputs.
 04/14	8:30PM		10:30PM		2:00		Got it to play effectively.
 04/15	9:30AM		12:00PM		2:30		Tuned LSTM model.
-				 Total: 27:30
+04/17	1:00PM		3:00PM		2:00		Tested LSTM model.
+04/18	10:00AM		1:30PM		3:30		Final LSTM testing.
+				 Total: 33:00
 
+Autoencoder Agent
+04/18	2:00PM		4:00PM		2:00		Autoencoder research.
+04/19	9:00AM		10:00AM		1:00		Build simple encoder.
+				 Total: 3:00
 
-PROJECT TOTAL:  92:00
+PROJECT TOTAL:  100:30
 
 
 
