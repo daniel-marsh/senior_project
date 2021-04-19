@@ -21,7 +21,7 @@ autoencoder.add(layers.Dense(25))
 autoencoder.add(layers.Dense(33))
 
 autoencoder.compile(loss = tf.losses.MeanSquaredError(), optimizer = tf.optimizers.Adam(), metrics=["accuracy"])
-autoencoder.fit(x_train, x_train, epochs=5)
+autoencoder.fit(x_train, x_train, epochs=2)
 
 autoencoder.pop()
 autoencoder.pop()
