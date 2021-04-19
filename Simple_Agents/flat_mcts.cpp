@@ -1,7 +1,7 @@
 #include <iostream>
 #include <vector>
 #include "simple.h"
-#include "board.h"
+#include "../board.h"
 #include "flat_mcts.h"
 using namespace std; 
 

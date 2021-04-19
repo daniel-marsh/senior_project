@@ -7,7 +7,7 @@ import numpy as np
 tf.compat.v1.disable_eager_execution()
 
 raw_data = pd.read_csv(
-    "formatted_stop_training_data.csv",
+    "../data/formatted_stop_training_data.csv",
     header=1,
     dtype='float32')
 
@@ -27,7 +27,7 @@ for i in range(0, len(raw_data)):
 output = np.array(output)
 padded_input = np.array(padded_input)
 
-encoder = tf.keras.models.load_model('./model_data/encoder')
+encoder = tf.keras.models.load_model('../model_data/encoder')
 
 compressed_input = encoder.predict(padded_input)
 
@@ -47,4 +47,4 @@ predictions = model.predict(compressed_input[:5])
 print(output[:5])
 print(predictions[:5])
 
-model.save('./model_data/stop_compressed')
+model.save('../model_data/stop_compressed')

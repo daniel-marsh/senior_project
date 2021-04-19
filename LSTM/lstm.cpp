@@ -4,12 +4,12 @@
 #include <string>
 #include <cstring>
 #include <stdio.h>
-#include "board.h"
+#include "../board.h"
 #include "lstm.h"
 using namespace std; 
 
 
-Board make_autoencoder_move(Board game_board) {
+Board make_lstm_move(Board game_board) {
     // std::cout << "LSTM TURN\n";
     // Get network input data (stop height %, runner height %, free runner)
     vector<vector<double>> input_data;
@@ -65,7 +65,7 @@ Board make_autoencoder_move(Board game_board) {
     // std::cout << "SENDING TO FILE\n";
     // Print to file
     ofstream lstmfile;
-    lstmfile.open("autoencoder_input.txt", ofstream::out | ofstream::trunc);
+    lstmfile.open("LSTM/lstm_input.txt", ofstream::out | ofstream::trunc);
     for (int i = 0; i < format_in.size()-1; i++) {
         char buffer [20];
         sprintf(buffer, "%lf,", format_in[i]);
@@ -78,23 +78,23 @@ Board make_autoencoder_move(Board game_board) {
 
     // Call LSTM network to choose roll or stop (pass all column data)
     double roll_stop = 0.0;
-    std::cout << "        CALLING AUTOENCODER\n";
+    std::cout << "        CALLING LSTM\n";
     // DO CALL TO NET HERE
-    string command = "python3 call_autoencoder.py";
+    string command = "python3 LSTM/call_lstm_model.py";
     system(command.c_str());
     // Get result
-    string result_auto;
-    ifstream autoresultfile("autoencoder_output.txt");
-    getline(autoresultfile, result_auto);
-    roll_stop = stod(result_auto.c_str());
+    string result_lstm;
+    ifstream lstmresultfile("LSTM/lstm_output.txt");
+    getline(lstmresultfile, result_lstm);
+    roll_stop = stod(result_lstm.c_str());
     std::cout << "           Output val: " << roll_stop << "\n";
 
     // If network is less than conf_val% confident with rolling, then stop some percenatage of the time
-    double conf_val = 0.85;
+    double conf_val = 0.99;
     if (roll_stop < conf_val) {
         // game_board.end_turn();
         // return game_board;
-        int uncert = ceil((conf_val - roll_stop)*15.0) + 1;
+        int uncert = ceil((1.0 - roll_stop)*15.0) + 1;
         // std::cout << uncert << "\n";
         int rand_choice = rand() % uncert;
         if (rand_choice != 0) {
@@ -119,7 +119,7 @@ Board make_autoencoder_move(Board game_board) {
     }
     // std::cout << "WRITING TO FILE\n";
     ofstream myfile;
-    myfile.open("roll_input.txt", ofstream::out | ofstream::trunc);
+    myfile.open("Roll_Network/roll_input.txt", ofstream::out | ofstream::trunc);
     for (int i = 0; i < 6; i++) {
         char buffer [50];
         sprintf(buffer, "%lf, %lf, %lf\n", roll_data[i][0], roll_data[i][1], roll_data[i][2]);
@@ -130,12 +130,12 @@ Board make_autoencoder_move(Board game_board) {
     int max_roll = 0;
     std::cout << "        CALLING ROLL\n";
     // CALL TO ROLL NET HERE
-    string command_roll = "python3 call_roll_model.py";
+    string command_roll = "python3 Roll_Network/call_roll_model.py";
     system(command_roll.c_str());
     // Get result
     // std::cout << "CALLED ROLL\n";
     string result;
-    ifstream resultfile("roll_output.txt");
+    ifstream resultfile("Roll_Network/roll_output.txt");
     getline(resultfile, result);
     max_roll = atoi(result.c_str());
     // std::cout << "GETTING BEST ROLL\n";

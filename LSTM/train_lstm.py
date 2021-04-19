@@ -26,7 +26,7 @@ tf.compat.v1.disable_eager_execution()
 
 # Load dataset
 data_train = pd.read_csv(
-    "formatted_stop_training_data.csv",
+    "../data/formatted_stop_training_data.csv",
     header=0,
     dtype='float32')
 
@@ -68,4 +68,4 @@ print(training_labels[:25])
 print("PREDICTIONS")
 print(predictions[:25])
 
-model.save('./model_data/test_lstm_model')
+model.save('../model_data/test_lstm_model')
