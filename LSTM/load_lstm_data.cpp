@@ -2,13 +2,13 @@
 #include <string>
 #include <vector>
 #include <fstream>
-#include "board.h"
+#include "../board.h"
 using namespace std; 
 
 vector<vector<double>> read_in() {
     // A function to read in the raw data from file
     vector<vector<double>> raw_data;
-    string file_name = "3_sided_start_inter_data.txt";
+    string file_name = "../data/3_sided_start_inter_data.txt";
     ifstream my_file(file_name);
     string line;
     if (my_file.is_open()) {
@@ -198,7 +198,7 @@ vector<vector<double>> training_data(vector<vector<double>> raw_data) {
 
 int write_to_csv(vector<vector<double>> formatted_data) {
     ofstream myfile;
-    myfile.open("stop_training_data.csv", ofstream::out | ofstream::app);
+    myfile.open("../data/stop_training_data.csv", ofstream::out | ofstream::app);
     for (int i = 0; i < formatted_data.size(); i++) {
         char buffer[100];
         int buf_len = sprintf(buffer, "%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf\n", 

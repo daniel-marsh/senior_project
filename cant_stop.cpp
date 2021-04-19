@@ -3,12 +3,12 @@
 #include <string>
 #include <cstring>
 #include "board.h"
-#include "random.h"
-#include "simple.h"
-#include "flat_mcts.h"
-#include "q_learn.h"
-#include "lstm.h"
-#include "autoencoder.h"
+#include "Simple_Agents/random.h"
+#include "Simple_Agents/simple.h"
+#include "Simple_Agents/flat_mcts.h"
+#include "Q_Learning/q_learn.h"
+#include "LSTM/lstm.h"
+#include "Autoencoder/autoencoder.h"
 using namespace std; 
 
 Q_agent q_learn_agent_0;
@@ -62,7 +62,7 @@ void q_testing(char** argv) {
             }
             else if ((strcmp(argv[2], "q_learn_init") == 0) or (strcmp(argv[2], "-q1") == 0)) {
                 player0_name = "Q-Learn with Init Agent";
-                q_learn_agent_0.init("3_side_start_data.txt");
+                q_learn_agent_0.init("data/3_side_start_data.txt");
                 q_learn_agent_0.train(q_train_time, dice_size);
                 
                 make_player0_move = q_agent0_move;
@@ -101,7 +101,7 @@ void q_testing(char** argv) {
             }
             else if ((strcmp(argv[3], "q_learn_init") == 0) or (strcmp(argv[3], "-q1") == 0)) {
                 player1_name = "Q-Learn with Init Agent";
-                q_learn_agent_1.init("3_side_start_data.txt");
+                q_learn_agent_1.init("data/3_side_start_data.txt");
                 q_learn_agent_1.train(q_train_time, dice_size);
                 
                 make_player1_move = q_agent1_move;
@@ -182,7 +182,7 @@ int main(int argc, char** argv) {
     // srand(time(0));
     // q_testing(argv);
     // return 1;
-    int q_train_time = 6;
+    int q_train_time = 20;
     string player0_name;
     string player1_name;
 
@@ -217,7 +217,7 @@ int main(int argc, char** argv) {
     else if ((strcmp(argv[2], "q_learn_init") == 0) or (strcmp(argv[2], "-q1") == 0)) {
         player0_name = "Q-Learn with Init Agent";
         std::cout << "Player 0: Q-Learning with Initial Values\n";
-        q_learn_agent_0.init("3_side_start_data.txt");
+        q_learn_agent_0.init("data/3_side_start_data.txt");
         q_learn_agent_0.train(q_train_time, dice_size);
         
         make_player0_move = q_agent0_move;
@@ -258,7 +258,7 @@ int main(int argc, char** argv) {
     else if ((strcmp(argv[3], "q_learn_init") == 0) or (strcmp(argv[3], "-q1") == 0)) {
         player1_name = "Q-Learn with Init Agent";
         std::cout << "Player 1: Q-Learning with initial values\n";
-        q_learn_agent_1.init("3_side_start_data.txt");
+        q_learn_agent_1.init("data/3_side_start_data.txt");
         q_learn_agent_1.train(q_train_time, dice_size);
         
         make_player1_move = q_agent1_move;
@@ -297,7 +297,7 @@ int main(int argc, char** argv) {
             }
             else {
                 move_num_1++;
-                std::cout << "    P1 making move #" << move_num_1 << "\n";
+                // std::cout << "    P1 making move #" << move_num_1 << "\n";
                 game_board = make_player1_move(game_board);
             }
             // std::cout << "END LOOP\n";

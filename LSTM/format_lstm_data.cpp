@@ -18,7 +18,7 @@ int main(int argc, char** argv) {
 
     // Read in the data
     fstream fin;
-    fin.open("stop_training_data.csv", ios::in);
+    fin.open("../data/stop_training_data.csv", ios::in);
     string line, entry;
     vector<vector<double>> full_data;
     getline(fin, line);
@@ -53,7 +53,7 @@ int main(int argc, char** argv) {
 
     // Output to a new csv
     ofstream myfile;
-    myfile.open("formatted_stop_training_data.csv", ofstream::out | ofstream::trunc);
+    myfile.open("../data/formatted_stop_training_data.csv", ofstream::out | ofstream::trunc);
     myfile << "SH0,RH0,P0,SH1,RH1,P1,SH2,RH2,P2,SH3,RH3,P3,SH4,RH4,P4,OUTPUT\n";
     for (int i = 0; i < formatted_data.size(); i++) {
         char buffer[200];

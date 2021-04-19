@@ -9,7 +9,7 @@ from tensorflow.keras import layers
 from tensorflow.keras.layers.experimental import preprocessing
 
 roll_train = pd.read_csv(
-    "roll_training_data.csv",
+    "../data/roll_training_data.csv",
     header=0,
     dtype='float32')
 
@@ -33,4 +33,4 @@ prediction = roll_model.predict(roll_features[:5])
 
 print(prediction)
 
-roll_model.save('./model_data/roll_model')
+roll_model.save('../model_data/roll_model')

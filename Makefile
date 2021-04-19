@@ -1,6 +1,6 @@
 CC = gcc
 CFLAGS = -std=c++17 -lstdc++
-AGENTS = random.cpp simple.cpp flat_mcts.cpp lstm.cpp autoencoder.cpp
+AGENTS = Simple_Agents/random.cpp Simple_Agents/simple.cpp Simple_Agents/flat_mcts.cpp LSTM/lstm.cpp Autoencoder/autoencoder.cpp
 
 all: cant_stop test_link_c load_data load_lstm_data format_lstm_data get_auto_data
 

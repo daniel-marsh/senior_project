@@ -6,7 +6,7 @@ from tensorflow import keras
 
 # Load in input data
 input_data = []
-with open("autoencoder_input.txt", "r") as my_file:
+with open("Autoencoder/autoencoder_input.txt", "r") as my_file:
     for line in my_file.readlines():
         num_list = [float(i) for i in line.split(",")]
         while len(num_list) < 33:
@@ -23,7 +23,7 @@ compressed_data = encoder.predict(input_data)
 # Get move suggestion
 prediction = model.predict(compressed_data)
 
-with open("autoencoder_output.txt", "w") as out_file:
+with open("Autoencoder/autoencoder_output.txt", "w") as out_file:
     str_out = str(prediction[0][0])
     out_file.write(str_out)
     out_file.close()

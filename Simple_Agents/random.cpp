@@ -1,6 +1,6 @@
 #include <iostream>
 #include <vector>
-#include "board.h"
+#include "../board.h"
 #include "random.h"
 using namespace std; 
 

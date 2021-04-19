@@ -2,7 +2,7 @@
 #include <string>
 #include <vector>
 #include <fstream>
-#include "board.h"
+#include "../board.h"
 using namespace std; 
 
 vector<double> get_state(Board game_board) {
@@ -70,7 +70,7 @@ vector<vector<double>> get_data(int dice_size) {
 
 int write_to_csv(vector<vector<double>> formatted_data, int data_size) {
     ofstream myfile;
-    myfile.open("auto_training_data.csv", ofstream::out | ofstream::app);
+    myfile.open("../data/auto_training_data.csv", ofstream::out | ofstream::app);
     for (int i = 0; i < formatted_data.size(); i++) {
         for (int j = 0; j < data_size-1; j++) {
             char buffer[20];
@@ -87,7 +87,7 @@ int write_to_csv(vector<vector<double>> formatted_data, int data_size) {
 
 int write_header() {
     ofstream myfile;
-    myfile.open("auto_training_data.csv", ofstream::out | ofstream::trunc);
+    myfile.open("../data/auto_training_data.csv", ofstream::out | ofstream::trunc);
     for (int i = 0; i < 10; i++) {
         char buffer[20];
         sprintf(buffer, "SH%d,RH%d,CP%d,", i, i, i);

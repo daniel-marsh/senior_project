@@ -4,7 +4,7 @@
 #include <cmath>
 #include <numeric>
 #include <fstream>
-#include "board.h"
+#include "../board.h"
 using namespace std; 
 
 // A Q-learning agent
@@ -76,7 +76,7 @@ class Q_agent {
             }
             // If the file did not open, return an error message (but not exit execution)
             else {
-                std::cout << line << " is not a valid file name\n";
+                std::cout << file_name << " is not a valid file name\n";
                 return 0;
             }
             // All has completed, so return

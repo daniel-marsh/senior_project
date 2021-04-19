@@ -7,7 +7,7 @@ import numpy as np
 tf.compat.v1.disable_eager_execution()
 
 x_train = pd.read_csv(
-    "auto_training_data.csv",
+    "../data/auto_training_data.csv",
     header=1,
     dtype='float32')
 
@@ -27,4 +27,4 @@ autoencoder.pop()
 autoencoder.pop()
 autoencoder.pop()
 
-autoencoder.save('./model_data/encoder')
+autoencoder.save('../model_data/encoder')

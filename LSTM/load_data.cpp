@@ -7,7 +7,7 @@ using namespace std;
 vector<vector<double>> read_in() {
     // A function to read in the raw data from file
     vector<vector<double>> raw_data;
-    string file_name = "3_sided_start_inter_data.txt";
+    string file_name = "../data/3_sided_start_inter_data.txt";
     ifstream my_file(file_name);
     string line;
     if (my_file.is_open()) {
@@ -140,7 +140,7 @@ vector<vector<double>> training_data(vector<vector<double>> raw_data) {
 
 int write_to_csv(vector<vector<double>> formatted_data) {
     ofstream myfile;
-    myfile.open("roll_training_data.csv", ofstream::out | ofstream::trunc);
+    myfile.open("../data/roll_training_data.csv", ofstream::out | ofstream::trunc);
     myfile << "Stop Height,Runner Height,Free Runner,Score Diff\n";
     for (int i = 0; i < formatted_data.size(); i++) {
         char buffer[50];

@@ -1,6 +1,6 @@
 #include <iostream>
 #include <vector>
-#include "board.h"
+#include "../board.h"
 using namespace std; 
 
 int choose_pairs(Board game_board, vector<vector<int>> pairs);

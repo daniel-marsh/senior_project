@@ -5,7 +5,7 @@ import tensorflow as tf
 from tensorflow import keras
 
 input_data = []
-with open("roll_input.txt", "r") as my_file:
+with open("Roll_Network/roll_input.txt", "r") as my_file:
     for line in my_file.readlines():
         num_list = [float(i) for i in line.split(",")]
         input_data.append(num_list)
@@ -29,7 +29,7 @@ if max_roll == roll_2_score:
 elif max_roll == roll_3_score:
     max_roll_ind = 2
 
-with open("roll_output.txt", "w") as out_file:
+with open("Roll_Network/roll_output.txt", "w") as out_file:
     max_roll_out = str(max_roll_ind) + "\n"
     out_file.write(max_roll_out)
     out_file.close()
