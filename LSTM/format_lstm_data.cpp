@@ -1,3 +1,8 @@
+/*Author: Daniel Marsh
+Project: Yale CPSC 490 Senior Project
+Description: Program to reformat raw data into a readable format for an LSTM network.
+*/
+
 #include <iostream>
 #include <string>
 #include <sstream>
@@ -6,17 +11,13 @@
 #include <math.h>
 using namespace std; 
 
-
-
-// A TensorFlow LSTM network can only take integer values as input so the data must be reformtted
 int main(int argc, char** argv) {
-
+    // Column probabilities for the small 3-sided dice game
     double col0_prob = 33.0/81.0;
     double col1_prob = 50.0/81;
     double col2_prob = 70.0/81.0;
     vector<double> col_probs = {col0_prob, col1_prob, col2_prob, col1_prob, col0_prob};
-
-    // Read in the data
+    // Read in the raw data
     fstream fin;
     fin.open("../data/stop_training_data.csv", ios::in);
     string line, entry;
@@ -31,10 +32,7 @@ int main(int argc, char** argv) {
         }
         full_data.push_back(row);
     }
-
     // Reformat for an LSTM network
-        // The stop values will be between 2 and 102
-        // The runner values will be between 103 and 203
     vector<vector<double>> formatted_data;
     for (int i = 0; i < full_data.size(); i++) {
         vector<double> formatted_line;
@@ -46,12 +44,12 @@ int main(int argc, char** argv) {
             formatted_line.push_back(runner_entry);
             formatted_line.push_back(col_probs[j]);
         }
-        // Reformat and add the roll/stop score
+        // Reformat and add the roll/stop score (ie optimal move)
         formatted_line.push_back(full_data[i][10]);
         formatted_data.push_back(formatted_line);
     }
 
-    // Output to a new csv
+    // Output to a csv
     ofstream myfile;
     myfile.open("../data/formatted_stop_training_data.csv", ofstream::out | ofstream::trunc);
     myfile << "SH0,RH0,P0,SH1,RH1,P1,SH2,RH2,P2,SH3,RH3,P3,SH4,RH4,P4,OUTPUT\n";
