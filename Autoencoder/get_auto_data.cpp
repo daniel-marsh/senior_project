@@ -39,7 +39,7 @@ vector<vector<double>> get_data(int dice_size) {
     game_board.init(dice_size);
     // Run simulations until we have enough data
     int num_states = 0;
-    int num_required = 50000;
+    int num_required = 150000;
     while (num_states < num_required) {
         // std::cout << "    Simulating new game\n    Num_states=" << num_states << "\n";
         while (game_board.game_over() == -1) {
@@ -70,7 +70,7 @@ vector<vector<double>> get_data(int dice_size) {
 
 int write_to_csv(vector<vector<double>> formatted_data, int data_size) {
     ofstream myfile;
-    myfile.open("../data/auto_training_data.csv", ofstream::out | ofstream::app);
+    myfile.open("./data/new_auto_training_data.csv", ofstream::out | ofstream::app);
     for (int i = 0; i < formatted_data.size(); i++) {
         for (int j = 0; j < data_size-1; j++) {
             char buffer[20];
@@ -87,7 +87,7 @@ int write_to_csv(vector<vector<double>> formatted_data, int data_size) {
 
 int write_header() {
     ofstream myfile;
-    myfile.open("../data/auto_training_data.csv", ofstream::out | ofstream::trunc);
+    myfile.open("./data/new_auto_training_data.csv", ofstream::out | ofstream::trunc);
     for (int i = 0; i < 10; i++) {
         char buffer[20];
         sprintf(buffer, "SH%d,RH%d,CP%d,", i, i, i);
@@ -103,10 +103,15 @@ int write_header() {
 int main(int argc, char** argv) {
     srand(time(NULL));
     write_header();
-    for (int i = 3; i < 7; i++) {
-        std::cout << "Getting data for d=" << i << "...\n";
-        vector<vector<double>> formatted_data = get_data(i);
-        std::cout << "Writing to csv...\n";
-        write_to_csv(formatted_data, formatted_data[0].size());
-    }
+
+    std::cout << "Getting data for d=" << 3 << "...\n";
+    vector<vector<double>> formatted_data = get_data(3);
+    std::cout << "Writing to csv...\n";
+    write_to_csv(formatted_data, formatted_data[0].size());
+
+    std::cout << "Getting data for d=" << 6 << "...\n";
+    formatted_data = get_data(6);
+    std::cout << "Writing to csv...\n";
+    write_to_csv(formatted_data, formatted_data[0].size());
+    
 }
