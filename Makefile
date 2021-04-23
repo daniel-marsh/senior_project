@@ -19,8 +19,8 @@ load_lstm_data: load_lstm_data.cpp
 format_lstm_data: format_lstm_data.cpp
 	$(CC) $(CFLAGS) -o format_lstm_data format_lstm_data.cpp
 
-get_auto_data: get_auto_data.cpp
-	$(CC) $(CFLAGS) -o get_auto_data get_auto_data.cpp
+get_auto_data: Autoencoder/get_auto_data.cpp
+	$(CC) $(CFLAGS) -o get_auto_data Autoencoder/get_auto_data.cpp
 	
 clean: 
 	$(RM) all
