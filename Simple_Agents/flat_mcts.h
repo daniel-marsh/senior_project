@@ -1,3 +1,8 @@
+/* 
+Author: Daniel Marsh
+Project: Yale CPSC 490 Senior Project
+Description: Header file for the flat MCTS agent.
+*/
 #include <iostream>
 #include <vector>
 #include "../board.h"
