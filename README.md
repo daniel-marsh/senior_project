@@ -11,12 +11,13 @@ The general call to the core program is
 $ ./cant_stop [dice_size] [agent 1] [agent 2] [num_games]
 
 Agent Names:
--r : Random
--s : Hard Coded Logic
--m : Simple MCTS agent
--q0 : Q-Learning agent with no initailization values
--q1 : Q-Learning agent with initialization values
--l : LSTM agent
+
+-r : Random\n
+-s : Hard Coded Logic\n
+-m : Simple MCTS agent\n
+-q0 : Q-Learning agent with no initailization values\n
+-q1 : Q-Learning agent with initialization values\n
+-l : LSTM agent\n
 -a : Autoencoder agent
 
 For more information about each agent, see the source code in the corresponding directories or the final report write-up in Other/.
