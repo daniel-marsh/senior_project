@@ -1,3 +1,8 @@
+/* 
+Author: Daniel Marsh
+Project: Yale CPSC 490 Senior Project
+Description: Program to make move decisions based on a flat MCTS algorithm.
+*/
 #include <iostream>
 #include <vector>
 #include "simple.h"
@@ -5,6 +10,7 @@
 #include "flat_mcts.h"
 using namespace std; 
 
+// Function to choose roll pairings
 int choose_pairs(Board game_board, vector<vector<int>> pairs) {
     // Find which pair results in most wins
     vector<int> wins;
@@ -19,7 +25,7 @@ int choose_pairs(Board game_board, vector<vector<int>> pairs) {
             clean_copy.clone(game_board);
             // Make the ith pair move
             clean_copy.make_move(pairs[i][0], pairs[i][1]);
-            // Playout the game
+            // Playout the game using hard coded logic game agent
             while (clean_copy.game_over() == -1) {
                 clean_copy = make_smart_move(clean_copy);
             }
@@ -31,7 +37,7 @@ int choose_pairs(Board game_board, vector<vector<int>> pairs) {
         // Store the win numbers for this pair
         wins.push_back(ith_pair_wins);
     }
-    // Get best move index
+    // Get best pairing index
     int max_wins = 0;
     int max_wins_index = 0;
     for (int i = 0; i < 3; i++) {
@@ -40,9 +46,11 @@ int choose_pairs(Board game_board, vector<vector<int>> pairs) {
             max_wins_index = i;
         }
     }
+    // Return the pairing that results in most wins
     return max_wins_index;
 }
 
+// Function to estimate if stopping or rolling is better at a given state
 int stop_or_roll(Board copy_game_board) {
     // Check if stopping or rolling leads to more wins
     int stop_wins = 0;
@@ -55,7 +63,7 @@ int stop_or_roll(Board copy_game_board) {
         clean_copy.clone(copy_game_board);
         // End the turn
         clean_copy.end_turn();
-        // Playout the game
+        // Playout the game using hard coded logic game agent
         while (clean_copy.game_over() == -1) {
             clean_copy = make_smart_move(clean_copy);
         }
@@ -77,7 +85,7 @@ int stop_or_roll(Board copy_game_board) {
         int best_move = choose_pairs(clean_copy, pairs);
         // Make the move
         clean_copy.make_move(pairs[best_move][0], pairs[best_move][1]);
-        // Playout the game
+        // Playout the game using hard coded logic game agent
         while (clean_copy.game_over() == -1) {
             clean_copy = make_smart_move(clean_copy);
         }
@@ -86,13 +94,14 @@ int stop_or_roll(Board copy_game_board) {
             roll_wins++;
         }
     }
-    // Return the optimal move
+    // Return the estimated better move
     if (stop_wins > roll_wins) {
         return 0;
     }
     return 1;
 }
 
+// Function to make the MCTS move
 Board make_mcts_move(Board game_board) {
     // Make a copy of the board 
     Board board_copy;
