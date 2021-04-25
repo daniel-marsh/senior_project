@@ -1,3 +1,8 @@
+/* 
+Author: Daniel Marsh
+Project: Yale CPSC 490 Senior Project
+Description: Header file for the autoencoder move agent.
+*/
 #include <iostream>
 #include <fstream>
 #include <vector>
