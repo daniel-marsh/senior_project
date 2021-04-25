@@ -1,3 +1,10 @@
+/* 
+Author: Daniel Marsh
+Project: Yale CPSC 490 Senior Project
+Description: This is the core program for calling the Can't Stop simulations. 
+                The program takes 4 command line arguments: dice_size player_0 player_1 number_of_simulations
+                The program outputs the win percentage of each player.
+*/
 #include <iostream>
 #include <vector>
 #include <string>
@@ -11,18 +18,19 @@
 #include "Autoencoder/autoencoder.h"
 using namespace std; 
 
+// Additional function calls for the Q-Learning agent since the agent stores some information (Q-values).
 Q_agent q_learn_agent_0;
 Q_agent q_learn_agent_1;
-
 Board q_agent0_move(Board game_board) {
     return q_learn_agent_0.make_move(game_board);
 }
-
 Board q_agent1_move(Board game_board) {
     return q_learn_agent_1.make_move(game_board);
 }
 
+// Test code for the Q-Learning agent
 void q_testing(char** argv) {
+    // Set up the initial variables
     int q_train_time = 0;
     string player0_name;
     string player1_name;
@@ -30,17 +38,20 @@ void q_testing(char** argv) {
     int num_sims = stoi(argv[4]);
     function<Board(Board)> make_player0_move;
     function<Board(Board)> make_player1_move;
-
+    // Outer loop is used to test different training times
     for (int timer_update = 1; timer_update < 10; timer_update++) {
         q_train_time = timer_update * 2;
         std::cout << q_train_time << " SECONDS OF TRAINING\n";
+        // Keep track of certain win statistics
         double avg_win_perc0 = 0.0;
         double avg_win_perc1 = 0.0;
         double low_p1 = 100.0;
         double high_p1 = 0.0;
         int below_90_sims = 0;
+        // Train the agent 20 different times at this training length
         for (int test_count = 0; test_count < 20; test_count++) {
             std::cout << "    Running test #" << test_count+1 << "\n";
+            // Get player 0
             if ((strcmp(argv[2], "random") == 0) or (strcmp(argv[2], "-r") == 0)) {
                 player0_name = "Random Agent";
                 make_player0_move = make_random_move;
@@ -79,7 +90,7 @@ void q_testing(char** argv) {
                 std::cout << "Invalid agent for player 0\n";
                 return;
             }
-
+            // Get player 1
             if ((strcmp(argv[3], "random") == 0) or (strcmp(argv[3], "-r") == 0)) {
                 player1_name = "Random Agent";
                 make_player1_move = make_random_move;
@@ -119,7 +130,7 @@ void q_testing(char** argv) {
                 return;
             }
 
-            
+            // Run the simulations (num_sims simulations for each of the 20 agents trained at this length)
             Board game_board;
             game_board.init(dice_size);
             int p0_wins = 0;
@@ -128,7 +139,9 @@ void q_testing(char** argv) {
                 if (i % 500 == 0) {
                     std::cout << "        Simulating game #" << i << "...\n";
                 }
+                // Alternate turns
                 int start_turn = i % 2;
+                // While the game is not over, call an agent to make a move
                 while (game_board.game_over() < 0) {
                     if (game_board.turn == start_turn) {
                         game_board = make_player0_move(game_board);
@@ -137,6 +150,7 @@ void q_testing(char** argv) {
                         game_board = make_player1_move(game_board);
                     }
                 }
+                // Check who won and keep track of win counts
                 int winner = game_board.game_over();
                 if (winner == start_turn) {
                     p0_wins++;
@@ -144,8 +158,10 @@ void q_testing(char** argv) {
                 else {
                     p1_wins++;
                 }
+                // Reset board
                 game_board.reset_board();
             }
+            // Calculate statistics
             double p0_win_percentage =  double(p0_wins)/double(num_sims)*100.0;
             avg_win_perc0 += p0_win_percentage;
             double p1_win_percentage =  double(p1_wins)/double(num_sims)*100.0;
@@ -159,11 +175,13 @@ void q_testing(char** argv) {
             if (p1_win_percentage < 90) {
                 below_90_sims++;
             }
+            // Print some stats for this individual agent
             std::cout << "\n";
             std::cout << "        " << player0_name << " won " << p0_win_percentage << "% of games\n";
             std::cout << "        " << player1_name << " won " << p1_win_percentage << "% of games\n";
             std::cout << "\n";
         }
+        // Print average stats over all agents at this training length
         avg_win_perc0 = avg_win_perc0 / 20;
         avg_win_perc1 = avg_win_perc1 / 20;
         std::cout << "\n\n";
@@ -177,23 +195,23 @@ void q_testing(char** argv) {
     return;
 }
 
+// Function to run the Can't Stop simulations
 int main(int argc, char** argv) {
-
-    // srand(time(0));
-    // q_testing(argv);
-    // return 1;
+    // Set up initial variables
+    srand(time(0));
     int q_train_time = 20;
     string player0_name;
     string player1_name;
-
+    function<Board(Board)> make_player0_move;
+    function<Board(Board)> make_player1_move;
+    // If the command line arguments are invalid, return an error message
     if (argc != 5) {
         std::cout << "Incorrect number of arguments.\nUsage: ./cant_stop [dice_size] [player0_agent] [player1_agent] [num_sims]\n";
         return 0;
     }
+    // Get the dice size from the command line
     int dice_size = stoi(argv[1]);
-    function<Board(Board)> make_player0_move;
-    function<Board(Board)> make_player1_move;
-
+    // Get the agent to use for player 0
     if ((strcmp(argv[2], "random") == 0) or (strcmp(argv[2], "-r") == 0)) {
         player0_name = "Random Agent";
         make_player0_move = make_random_move;
@@ -230,11 +248,12 @@ int main(int argc, char** argv) {
         player0_name = "Autoencoder Agent";
         make_player0_move = make_autoencoder_move;
     }
+    // If the argument is not a valid agent name, return an error
     else {
         std::cout << "Invalid agent for player 0\n";
         return -1;
     }
-
+    // Get the agent to use for player 1
     if ((strcmp(argv[3], "random") == 0) or (strcmp(argv[3], "-r") == 0)) {
         player1_name = "Random Agent";
         make_player1_move = make_random_move;
@@ -271,38 +290,42 @@ int main(int argc, char** argv) {
         player1_name = "Autoencoder Agent";
         make_player1_move = make_autoencoder_move;
     }
+    // Again, if the argument given is not a valid agent, return an error 
     else {
         std::cout << "Invalid agent for player 1\n";
         return -1;
     }
-
-    
+    // Get the number of simulations to run from the command line
+    int num_sims = stoi(argv[4]);
+    // Declare and initialize the game board
     Board game_board;
     game_board.init(dice_size);
-    int num_sims = stoi(argv[4]);
+    // Simulate the games
     int p0_wins = 0;
     int p1_wins = 0;
     for (int i = 0; i < num_sims; i++) {
+        // Print every so often to show that program is running smoothly
         if (i % 1 == 0) {
             std::cout << "Simulating game #" << i << "...\n";
         }
+        // Alternate which agent starts to elimate first move advantage
         int start_turn = i % 2;
         int move_num_0 = 0;
         int move_num_1 = 0;
+        // While the game is not over, call an agent to make a move
         while (game_board.game_over() < 0) {
             if (game_board.turn == start_turn) {
                 move_num_0++;
-                // std::cout << "    P0 making move #" << move_num_0 << "\n";
                 game_board = make_player0_move(game_board);
             }
             else {
                 move_num_1++;
-                // std::cout << "    P1 making move #" << move_num_1 << "\n";
                 game_board = make_player1_move(game_board);
             }
-            // std::cout << "END LOOP\n";
         }
+        // Figure out who won
         int winner = game_board.game_over();
+        // Keep track of win counts
         if (winner == start_turn) {
             std::cout << "P0 wins\n";
             p0_wins++;
@@ -311,12 +334,11 @@ int main(int argc, char** argv) {
             p1_wins++;
             std::cout << "P1 wins\n";
         }
+        // Reset the board and loop again
         game_board.reset_board();
     }
     
-    // game_board.display_board();
-    // std::cout << "\n\nPlayer " << winner << " wins!\n";
-    // std::cout << "The Q Learning agent won " << p1_wins << " games out of 10000 simulations\n";
+    // Output the player win %s
     std::cout << player0_name << " won " << double(p0_wins)/double(num_sims)*100.0 << "% of games\n";
     std::cout << player1_name << " won " << double(p1_wins)/double(num_sims)*100.0 << "% of games\n";
     return 0;
