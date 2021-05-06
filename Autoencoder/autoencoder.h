@@ -8,6 +8,7 @@ Description: Header file for the autoencoder move agent.
 #include <vector>
 #include <string>
 #include <cstring>
+#include <cmath>
 #include "../board.h"
 using namespace std; 
 

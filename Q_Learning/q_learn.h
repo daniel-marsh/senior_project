@@ -99,11 +99,12 @@ class Q_agent {
 
         // A function to train the q_learning agent
             // Input: Number of seconds of training, number of sides of the dice for this version of the game
-        int train(int seconds, int dice_size) {
+        int train(float seconds, int dice_size) {
             // Create the training board
             Board game_board;
             game_board.init(dice_size);
             // TRAINING PARAMETERS
+            int int_sec = ceil(seconds);
             double epsilon = 0.3;
             double min_epsilon = 0.085;
             double gamma = 0.99;
@@ -126,7 +127,7 @@ class Q_agent {
                 // After a certain number of games, reduce the exploration rate (epsilon)
                     // The rate at which exploration decreases varies depending on how long the training session is
                     // Longer training sessions can affored to explore for longer initially
-                if ((epsilon > min_epsilon) && (game_count % seconds == 0)) {
+                if ((epsilon > min_epsilon) && (game_count % int_sec == 0)) {
                     epsilon = epsilon * e_decay;
                 }
                 game_count++;
@@ -176,7 +177,7 @@ class Q_agent {
                             for (int i = 0; i < 3; i++) {
                                 // Copy the board and play out the move of choosing the ith roll
                                 Board copy_board;
-                                copy_board.init(game_board.dice_size);
+                                copy_board.init(game_board.dice_size, 0);
                                 copy_board.clone(game_board);
                                 copy_board.make_move(pairs[i][0], pairs[i][1]);
                                 // If the move makes you go bust, store the penalty and give the turn back (solitaire for training)
@@ -257,7 +258,7 @@ class Q_agent {
                             for (int i = 0; i < 3; i++) {
                                 // Copy the board and play out the move of choosing the ith pair
                                 Board copy_board;
-                                copy_board.init(game_board.dice_size);
+                                copy_board.init(game_board.dice_size, 0);
                                 copy_board.clone(game_board);
                                 copy_board.make_move(pairs[i][0], pairs[i][1]);
                                 // If the move makes the player go bust, give the turn back (solitaire for training)
@@ -299,6 +300,7 @@ class Q_agent {
                 game_board.reset_board();
             }
             // Once time is up, return
+            std::cout << game_count << "\n";
             return 1;
         }
 
@@ -332,7 +334,7 @@ class Q_agent {
             for (int i = 0; i < 3; i++) {
                 // Make a copy of the board
                 Board copy_board;
-                copy_board.init(game_board.dice_size);
+                copy_board.init(game_board.dice_size, 0);
                 copy_board.clone(game_board);
                 // Make the move on the copied board corresponding to choosing the ith pair
                 copy_board.make_move(pairs[i][0], pairs[i][1]);
