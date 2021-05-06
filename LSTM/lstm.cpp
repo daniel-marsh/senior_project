@@ -8,6 +8,7 @@ Description: Main program for the LSTM agent.
 #include <vector>
 #include <string>
 #include <cstring>
+#include <cmath>
 #include <stdio.h>
 #include "../board.h"
 #include "lstm.h"

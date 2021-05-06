@@ -8,6 +8,7 @@ Description: Core program for making move decisions with the Autoencoder.
 #include <vector>
 #include <string>
 #include <cstring>
+#include <cmath>
 #include <stdio.h>
 #include "../board.h"
 #include "autoencoder.h"

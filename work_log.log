@@ -71,7 +71,26 @@ Clean Up
 04/25	4:15PM		4:30PM		0:15		Cleaned up simle agent code.
 				 Total: 3:30
 
-PROJECT TOTAL:  112:00
+Testing
+04/25	4:30PM		6:30PM		2:00		Ran Q_learning testing.
+04/26	9:15AM		11:15AM		2:00		Ran more Q testing.
+04/29	10:30AM		3:00PM		4:30		Got final Q results.
+04/30	2:00PM		4:30PM		2:30		Generated LSTM test results.
+05/03	1:00PM		4:00PM		3:00		Generated Autoencoder test results.
+				 Total: 14:00
+
+Report Writeup
+05/03	4:30PM		5:30PM		1:00		Wrote first abstract draft.
+05/04	11:00AM		12:00PM		1:00		Made structure plan.
+05/04	12:30PM		5:30PM		5:00		Wrote intro and implementation sections.
+05/05	11:00AM		4:30PM		5:30		Wrote results and discussion sections.
+05/05	6:00PM		7:00PM		1:00		Wrote conclusion and created appendix.
+05/06	10:00AM		11:00AM 	1:00		Made edits.
+05/06	3:30PM		5:00PM		1:30 		Made further edits. Submitted for review. 
+		
+				 Total: 16:00
+
+PROJECT TOTAL:  142:00
 
 
 

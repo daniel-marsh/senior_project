@@ -33,7 +33,7 @@ class Board {
         vector<double> column_probs;
 
         // A function to setup the initial state of the board
-        int init(int given_dice_size) {
+        int init(int given_dice_size, int get_col_probs = 1) {
             vector<double> column_counts;
             // Get the dice size
             dice_size = given_dice_size;
@@ -54,6 +54,9 @@ class Board {
                 column_counts.push_back(0.0);
             }
             // Get the column probabilities by iterating through all possible rolls
+            if (get_col_probs != 1) {
+                return 1;
+            }
             for (int a = 0; a < dice_size; a++) {
                 for (int b = 0; b < dice_size; b++) {
                     for (int c = 0; c < dice_size; c++) {
