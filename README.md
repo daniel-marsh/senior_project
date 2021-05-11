@@ -16,8 +16,6 @@ Agent Names:
 
 -s : Hard Coded Logic
 
--m : Simple MCTS agent
-
 -q0 : Q-Learning agent with no initailization values
 
 -q1 : Q-Learning agent with initialization values
@@ -26,5 +24,5 @@ Agent Names:
 
 -a : Autoencoder agent
 
-For more information about each agent, see the source code in the corresponding directories or the final report write-up in Other/.
+For more information about each agent, see the source code in the corresponding directories or the final report write-up in Web_Pages/.
 
