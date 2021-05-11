@@ -62,41 +62,44 @@ Board make_lstm_move(Board game_board) {
             format_in[(3*runner_col)+1] = runner_perc;
         }
     }
-    // Send data to LSTM input file
-    ofstream lstmfile;
-    lstmfile.open("LSTM/lstm_input.txt", ofstream::out | ofstream::trunc);
-    for (int i = 0; i < format_in.size()-1; i++) {
+    // Don't stop at the start of a new turn
+    if (game_board.start_turn() == -1) {
+        // Send data to LSTM input file
+        ofstream lstmfile;
+        lstmfile.open("LSTM/lstm_input.txt", ofstream::out | ofstream::trunc);
+        for (int i = 0; i < format_in.size()-1; i++) {
+            char buffer [20];
+            sprintf(buffer, "%lf,", format_in[i]);
+            lstmfile << buffer;
+        }
         char buffer [20];
-        sprintf(buffer, "%lf,", format_in[i]);
+        sprintf(buffer, "%lf\n", format_in[format_in.size()-1]);
         lstmfile << buffer;
-    }
-    char buffer [20];
-    sprintf(buffer, "%lf\n", format_in[format_in.size()-1]);
-    lstmfile << buffer;
-    lstmfile.close();
-    // Call LSTM network to choose whether to roll or stop
-    double roll_stop = 0.0;
-    std::cout << "        CALLING LSTM\n";
-    // System call to the LSTM network
-    string command = "python3 LSTM/call_lstm_model.py";
-    system(command.c_str());
-    // Get result from LSTM output file
-    string result_lstm;
-    ifstream lstmresultfile("LSTM/lstm_output.txt");
-    getline(lstmresultfile, result_lstm);
-    roll_stop = stod(result_lstm.c_str());
-    std::cout << "           Output val: " << roll_stop << "\n";
+        lstmfile.close();
+        // Call LSTM network to choose whether to roll or stop
+        double roll_stop = 0.0;
+        std::cout << "        CALLING LSTM\n";
+        // System call to the LSTM network
+        string command = "python3 LSTM/call_lstm_model.py";
+        system(command.c_str());
+        // Get result from LSTM output file
+        string result_lstm;
+        ifstream lstmresultfile("LSTM/lstm_output.txt");
+        getline(lstmresultfile, result_lstm);
+        roll_stop = stod(result_lstm.c_str());
+        std::cout << "           Output val: " << roll_stop << "\n";
 
-    // If network is less than 99% confident with rolling, then stop some percenatage of the time
-    double conf_val = 0.99;
-    if (roll_stop < conf_val) {
-        // Function to determine how often to stop (more likley to stop at lower confidence values)
-        int uncert = ceil((1.0 - roll_stop)*15.0) + 1;
-        // Make a weighted choice as to whether to stop
-        int rand_choice = rand() % uncert;
-        if (rand_choice != 0) {
-            game_board.end_turn();
-            return game_board;
+        // If network is less than 99% confident with rolling, then stop some percenatage of the time
+        double conf_val = 0.99;
+        if (roll_stop < conf_val) {
+            // Function to determine how often to stop (more likley to stop at lower confidence values)
+            int uncert = ceil((1.0 - roll_stop)*15.0) + 1;
+            // Make a weighted choice as to whether to stop
+            int rand_choice = rand() % uncert;
+            if (rand_choice != 0) {
+                game_board.end_turn();
+                return game_board;
+            }
         }
     }
     // If the agent did not stop, choose which roll to select

@@ -28,6 +28,32 @@ Board q_agent1_move(Board game_board) {
     return q_learn_agent_1.make_move(game_board);
 }
 
+// Test agents in a solitaire game
+void solitaire_test(function<Board(Board)> make_move) {
+    int dice_size = 3;
+    int num_sims = 10;
+    Board game_board;
+    game_board.init(dice_size);
+    int num_turns_sum = 0;
+    for (int i = 0; i < num_sims; i++) {
+        int num_turns = 1;
+        while (game_board.game_over() < 0) {
+            if (game_board.turn == 0) {
+                game_board = make_move(game_board);
+            }
+            else {
+                num_turns++;
+                game_board.end_turn();
+            }
+        }
+        num_turns_sum += num_turns;
+        std::cout << "Num turns = " << num_turns << "\n";
+        game_board.reset_board();
+    }
+    double avg_num_turns = (double)num_turns_sum / (double)num_sims;
+    std::cout << "Average number of turns to win = " << avg_num_turns << "\n";
+}
+
 // Test code for the Q-Learning agent
 void q_testing(char** argv) {
     // Set up the initial variables
@@ -199,7 +225,7 @@ void q_testing(char** argv) {
 int main(int argc, char** argv) {
     // Set up initial variables
     srand(time(0));
-    int q_train_time = 20;
+    double q_train_time = 5;
     string player0_name;
     string player1_name;
     function<Board(Board)> make_player0_move;
@@ -253,6 +279,8 @@ int main(int argc, char** argv) {
         std::cout << "Invalid agent for player 0\n";
         return -1;
     }
+    // solitaire_test(make_player0_move);
+    // return 0;
     // Get the agent to use for player 1
     if ((strcmp(argv[3], "random") == 0) or (strcmp(argv[3], "-r") == 0)) {
         player1_name = "Random Agent";
