@@ -13,10 +13,13 @@ using namespace std;
 Board make_random_move(Board game_board) {
     // Generate a random number between 0 and 2
     int rand_choice = rand() % 3;
-    // Stop 1/3 of the time (if the number generated was 0)
-    if (rand_choice == 0) {
-        game_board.end_turn();
-        return game_board;
+    // Don't stop at the start of a new turn
+    if (game_board.start_turn() == -1) {
+        // Stop 1/3 of the time (if the number generated was 0)
+        if (rand_choice == 0) {
+            game_board.end_turn();
+            return game_board;
+        }
     }
     // Otherwise, roll the other 2/3 of the time
     // Get the roll and pairings

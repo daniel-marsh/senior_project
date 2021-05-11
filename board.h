@@ -84,6 +84,16 @@ class Board {
             return 1;
         }
 
+        // A function to determine if it is the start of a new turn
+        int start_turn() {
+            for (int i  = 0; i < 3; i++) {
+                if (runner_positions[i][0] != -1) {
+                    return -1;
+                }
+            }
+            return 1;
+        }
+
         // A function to reset the board to the initial state
         int reset_board() {
             // Reset turn

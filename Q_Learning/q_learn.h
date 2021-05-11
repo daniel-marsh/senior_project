@@ -311,17 +311,20 @@ class Q_agent {
             // Get the action values (value of stopping vs value of rolling)
             double stop_val = q_vals[bucket_ind[0]][bucket_ind[1]][bucket_ind[2]][0];
             double roll_val = q_vals[bucket_ind[0]][bucket_ind[1]][bucket_ind[2]][1];
-            // If stopping predicts a lower number of turns to win, then stop
-            if (stop_val < roll_val) {
-                game_board.end_turn();
-                return game_board;
-            }
-            // If stopping is no different from rolling, stop half of the time, roll half of the time
-            if (stop_val == roll_val) {
-                double r = ((double)rand() / (RAND_MAX));
-                if (r < 0.5) {
+            // If it is not the first roll, consider stopping
+            if (game_board.start_turn() == -1) {
+                // If stopping predicts a lower number of turns to win, then stop
+                if (stop_val < roll_val) {
                     game_board.end_turn();
                     return game_board;
+                }
+                // If stopping is no different from rolling, stop half of the time, roll half of the time
+                if (stop_val == roll_val) {
+                    double r = ((double)rand() / (RAND_MAX));
+                    if (r < 0.5) {
+                        game_board.end_turn();
+                        return game_board;
+                    }
                 }
             }
             // Otherwise rolling is better (or equal and we randomly chose to roll)
